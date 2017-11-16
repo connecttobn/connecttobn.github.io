@@ -1,19 +1,28 @@
-sap.ui.define(['sap/ui/core/UIComponent'], function(UIComponent) {
-	"use strict";
+sap.ui.define(['sap/ui/core/UIComponent'],
+	function(UIComponent) {
+	'use strict';
 
-	var Component = UIComponent.extend("sap.m.sample.GenericTileAsFeedTile.Component", {
+	var Component = UIComponent.extend('sap.tnt.sample.ToolHeaderIconTabHeader.Component', {
 		metadata : {
-			rootView : "sap.m.sample.GenericTileAsFeedTile.Page",
+			rootView : 'sap.tnt.sample.ToolHeaderIconTabHeader.V',
 			dependencies : {
-				libs : ["sap.m"]
+				libs : [
+					'sap.tnt',
+					'sap.m'
+				]
 			},
-			includes : [ "style.css" ],
 			config : {
 				sample : {
-					files : ["Page.view.xml", "Page.controller.js", "style.css"]
+					stretch : true,
+					files : [
+						'V.view.xml',
+						"V.controller.js"
+					]
 				}
 			}
 		}
 	});
+
 	return Component;
+
 });

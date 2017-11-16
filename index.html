@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
 
-		<title>Feed and News Tile</title>
+		<title>ToolHeader with IconTabHeader</title>
 
 		<script id="sap-ui-bootstrap"
 			src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
@@ -14,7 +14,7 @@
 			data-sap-ui-xx-bindingSyntax="complex"
 			data-sap-ui-preload="async"
 			data-sap-ui-compatVersion="edge"
-			data-sap-ui-resourceroots='{"sap.m.sample.GenericTileAsFeedTile": "./"}'>
+			data-sap-ui-resourceroots='{"sap.tnt.sample.ToolHeaderIconTabHeader": "./", {{PARENT_RESOURCES}} "sap.ui.demo.mock": "mockdata"}'>
 		</script>
 
 		<!-- Application launch configuration -->
@@ -25,9 +25,9 @@
 					pages: [
 						new sap.m.Page({
 							title: "Sunil B N",
-							enableScrolling : true,
+							enableScrolling : false,
 							content: [ new sap.ui.core.ComponentContainer({
-								name : "sap.m.sample.GenericTileAsFeedTile"
+								height : "100%", name : "sap.tnt.sample.ToolHeaderIconTabHeader"
 							})]
 						})
 					]
