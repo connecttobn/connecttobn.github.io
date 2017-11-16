@@ -10,7 +10,7 @@
 				<OverflowToolbarLayoutData priority="NeverOverflow" />
 			</layoutData>
 		</Button>
-		<ToolbarSpacer />
+
 		<!-- <core:Icon src="sap-icon://activate">
 		</core:Icon> -->
 		<Text text="Sunil B N" wrapping="false">
@@ -18,6 +18,7 @@
 				<OverflowToolbarLayoutData priority="NeverOverflow" />
 			</layoutData>
 		</Text>
+		<ToolbarSpacer />
 		<IconTabHeader id="iconTabHeader"
 			selectedKey="invalidKey"
 			select="onSelectTab"
@@ -37,6 +38,8 @@
 				<IconTabFilter text="Portfolio">
 				</IconTabFilter>
 				<IconTabFilter text="Achievements">
+				</IconTabFilter>
+				<IconTabFilter text="Contact">
 				</IconTabFilter>
 			</items>
 		</IconTabHeader>
