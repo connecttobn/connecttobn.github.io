@@ -4,7 +4,7 @@ sap.ui.define([
 ], function(jQuery, Controller) {
 	"use strict";
 
-	return Controller.extend("sap.tnt.sample.ToolHeaderIconTabHeader.V", {
+	return Controller.extend("connecttobn.home", {
 
 		onInit: function () {
 

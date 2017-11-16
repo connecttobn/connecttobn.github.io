@@ -1,10 +1,15 @@
+/*
+* @version 0.1
+* @author  connecttobn
+* @created 2017-11-16
+*/
 sap.ui.define(['sap/ui/core/UIComponent'],
 	function(UIComponent) {
 	'use strict';
 
-	var Component = UIComponent.extend('sap.tnt.sample.ToolHeaderIconTabHeader.Component', {
+	var Component = UIComponent.extend('connecttobn.Component', {
 		metadata : {
-			rootView : 'sap.tnt.sample.ToolHeaderIconTabHeader.V',
+			rootView : 'connecttobn.home',
 			dependencies : {
 				libs : [
 					'sap.tnt',
@@ -15,8 +20,8 @@ sap.ui.define(['sap/ui/core/UIComponent'],
 				sample : {
 					stretch : true,
 					files : [
-						'V.view.xml',
-						"V.controller.js"
+						'home.view.xml',
+						"home.controller.js"
 					]
 				}
 			}

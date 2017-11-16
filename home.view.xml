@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName="sap.tnt.sample.ToolHeaderIconTabHeader.V"
+	controllerName="connecttobn.home"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
 	xmlns:tnt="sap.tnt"
@@ -13,7 +13,7 @@
 
 		<!-- <core:Icon src="sap-icon://activate">
 		</core:Icon> -->
-		<Text text="Sunil B N" wrapping="false">
+		<Text text="Sunil B N Portfolio" wrapping="false">
 			<layoutData>
 				<OverflowToolbarLayoutData priority="NeverOverflow" />
 			</layoutData>
@@ -57,7 +57,37 @@
 
 	</tnt:ToolHeader>
 	<Panel>
-		<Label
+		<GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout"
+			header="UNDER CONSTRUCTION"
+			frameType="TwoByOne" press="press">
+			<TileContent footer="tasks are pending">
+				<FeedContent contentText="I am trying to build this in SAPUI5 in free time" value="1729" />
+			</TileContent>
+		</GenericTile>
+
+		<SlideTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout">
+			<tiles>
+				<GenericTile
+					backgroundImage="sample.jpg"
+					frameType="TwoByOne" press="press">
+					<TileContent footer="August 21, 2016">
+						<NewsContent
+							contentText="This in under construction"
+							subheader="As of Today" />
+					</TileContent>
+				</GenericTile>
+				<GenericTile
+					backgroundImage="test-resources/sap/m/demokit/sample/GenericTileAsFeedTile/images/NewsImage2.png"
+					frameType="TwoByOne" press="press">
+					<TileContent footer="August 21, 2016">
+						<NewsContent
+							contentText="I will build this soon"
+							subheader="As of yesterday" />
+					</TileContent>
+				</GenericTile>
+			</tiles>
+		</SlideTile>
+		<Label visible="false"
 			id="labelId"
 			text="Under Developement"/>
 	</Panel>
