@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Projects</title>
     <meta charset="UTF-8">
@@ -17,79 +18,111 @@
         </div>
     </div>
     <div class="w3-container w3-margin-top">
-    <!-- Search Bar -->
-    <div class="w3-container w3-margin">
-        <div class="w3-row w3-center">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <div class="w3-bar" style="width: 100%;">
-                    <input type="text" id="toolSearch" class="w3-input w3-border w3-round" placeholder="Search for tools..." style="width:100%;" oninput="searchTools()">
+        <!-- Search Bar -->
+        <div class="w3-container w3-margin">
+            <div class="w3-row w3-center">
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div class="w3-bar" style="width: 100%;">
+                        <input type="text" id="toolSearch" class="w3-input w3-border w3-round"
+                            placeholder="Search for tools..." style="width:100%;" oninput="searchTools()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Grid -->
+        <div class="w3-container w3-margin-top" style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <div id="toolsGrid" class="w3-row"
+                style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin: 0 auto; row-gap: 20px">
+
+
+                <!-- Chrome Todo Tracker Extension -->
+                <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;"
+                    data-tags="chrome extension todo tracker productivity github task management">
+                    <a href="https://github.com/connecttobn/chrome-todo-tracker" target="_blank"
+                        style="text-decoration:none;">
+                        <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
+                            <div class="w3-container w3-indigo w3-round-large"
+                                style="height:120px; display:flex; align-items:center; justify-content:center;">
+                                <div class="w3-center">
+                                    <h5 class="w3-text-white" style="margin:0;">Chrome Todo Tracker</h5>
+                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">Chrome
+                                        extension for task management</p>
+                                </div>
+                            </div>
+                            <div class="w3-container w3-center" style="display:none;">
+                                <h5>Chrome Todo Tracker</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- BMI Calculator Tool -->
+                <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;"
+                    data-tags="bmi calculator health weight fitness body mass index">
+                    <a href="/projects/bmi-calculator/" style="text-decoration:none;">
+                        <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
+                            <div class="w3-container w3-blue w3-round-large"
+                                style="height:120px; display:flex; align-items:center; justify-content:center;">
+                                <div class="w3-center">
+                                    <h5 class="w3-text-white" style="margin:0;">BMI Calculator</h5>
+                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">
+                                        Calculate your Body Mass Index</p>
+                                </div>
+                            </div>
+                            <div class="w3-container w3-center" style="display:none;">
+                                <h5>BMI Calculator</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+
+
+                <!-- Password Generator Tool -->
+                <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;"
+                    data-tags="password generator secure random">
+                    <a href="/projects/password-generator/" style="text-decoration:none;">
+                        <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
+                            <div class="w3-container w3-deep-purple w3-round-large"
+                                style="height:120px; display:flex; align-items:center; justify-content:center;">
+                                <div class="w3-center">
+                                    <h5 class="w3-text-white" style="margin:0;">Password Generator</h5>
+                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">Generate
+                                        secure random passwords</p>
+                                </div>
+                            </div>
+                            <div class="w3-container w3-center" style="display:none;">
+                                <h5>Password Generator</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+
+
+                <!-- EMI Calculator Tool -->
+                <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;"
+                    data-tags="emi calculator loan finance mortgage interest installment monthly payment">
+                    <a href="/projects/emi-calculator/" style="text-decoration:none;">
+                        <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
+                            <div class="w3-container w3-green w3-round-large"
+                                style="height:120px; display:flex; align-items:center; justify-content:center;">
+                                <div class="w3-center">
+                                    <h5 class="w3-text-white" style="margin:0;">EMI Calculator</h5>
+                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">
+                                        Calculate loan monthly installments</p>
+                                </div>
+                            </div>
+                            <div class="w3-container w3-center" style="display:none;">
+                                <h5>EMI Calculator</h5>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Tools Grid -->
-    <div class="w3-container w3-margin-top" style="max-width: 800px; margin: 0 auto; text-align: center;">
-        <div id="toolsGrid" class="w3-row" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin: 0 auto;">
-
-            
-            <!-- BMI Calculator Tool -->
-            <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;" data-tags="bmi calculator health weight fitness body mass index">
-                <a href="/projects/bmi-calculator/" style="text-decoration:none;">
-                    <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
-                        <div class="w3-container w3-blue w3-round-large" style="height:120px; display:flex; align-items:center; justify-content:center;">
-                                <div class="w3-center">
-                                    <h5 class="w3-text-white" style="margin:0;">BMI Calculator</h5>
-                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">Calculate your Body Mass Index</p>
-                                </div>
-                        </div>
-                        <div class="w3-container w3-center" style="display:none;">
-                            <h5>BMI Calculator</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            
-
-            
-            <!-- Password Generator Tool -->
-            <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;" data-tags="password generator secure random">
-                <a href="/projects/password-generator/" style="text-decoration:none;">
-                    <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
-                        <div class="w3-container w3-deep-purple w3-round-large" style="height:120px; display:flex; align-items:center; justify-content:center;">
-                                <div class="w3-center">
-                                    <h5 class="w3-text-white" style="margin:0;">Password Generator</h5>
-                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">Generate secure random passwords</p>
-                                </div>
-                        </div>
-                        <div class="w3-container w3-center" style="display:none;">
-                            <h5>Password Generator</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            
-
-            
-            <!-- EMI Calculator Tool -->
-            <div class="w3-col l4 m6 s6 tool-card" style="height:120px; padding:10px;" data-tags="emi calculator loan finance mortgage interest installment monthly payment">
-                <a href="/projects/emi-calculator/" style="text-decoration:none;">
-                    <div class="w3-card-4 w3-round-large" style="overflow:hidden; cursor:pointer;">
-                        <div class="w3-container w3-green w3-round-large" style="height:120px; display:flex; align-items:center; justify-content:center;">
-                                <div class="w3-center">
-                                    <h5 class="w3-text-white" style="margin:0;">EMI Calculator</h5>
-                                    <p class="w3-text-white" style="font-size:12px; margin:4px 0; opacity:0.9;">Calculate loan monthly installments</p>
-                                </div>
-                        </div>
-                        <div class="w3-container w3-center" style="display:none;">
-                            <h5>EMI Calculator</h5>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
     <!-- JavaScript is loaded from external file: /projects/js/tools.js -->
 </body>
 
