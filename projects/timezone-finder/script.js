@@ -1,9 +1,12 @@
  // Global variables
- let formats = {
-    1: '12-hour',
-    2: '12-hour',
-    3: '12-hour'
+let formats = {
+   1: '12-hour',
+   2: '12-hour',
+   3: '12-hour'
 };
+
+// Variable to track third timezone visibility
+let showThirdTimezone = true;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Then initialize select2 after timezoneObjects is defined
     initializeSelect2();
     
+    // Set initial state of third timezone based on checkbox
+    showThirdTimezone = document.getElementById('showThirdTimezone').checked;
+    toggleThirdTimezone();
+    
     // Update display and initialize slider
     updateDisplay();
     initializeTimeSlider();
@@ -20,6 +27,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update every minute to keep current time marker accurate
     setInterval(updateCurrentTimeMarkers, 60000);
 });
+
+// Function to toggle the visibility of the third timezone row
+function toggleThirdTimezone() {
+    showThirdTimezone = document.getElementById('showThirdTimezone').checked;
+    const thirdTimezoneRow = document.querySelector('.time-row-container.tz:nth-of-type(3)');
+    
+    if (thirdTimezoneRow) {
+        thirdTimezoneRow.style.display = showThirdTimezone ? 'flex' : 'none';
+    }
+    
+    // Update the display to recalculate overlaps
+    updateDisplay();
+}
 
 // Function to initialize select2 dropdowns
 function initializeSelect2() {
@@ -485,19 +505,36 @@ function updateOverlapIndicator(timezone1, timezone2, timezone3) {
         // Get categories for each timezone at this hour
         const category1 = getCategoryForHourInTimezone(i, timezone1);
         const category2 = getCategoryForHourInTimezone(i, timezone2);
-        const category3 = getCategoryForHourInTimezone(i, timezone3);
+        let category3 = 'working-hours'; // Default to working hours if third timezone is hidden
+        
+        if (showThirdTimezone) {
+            category3 = getCategoryForHourInTimezone(i, timezone3);
+        }
         
         // Determine overlap status
         let overlapClass = 'no-overlap';
         
-        if (category1 === 'working-hours' && category2 === 'working-hours' && category3 === 'working-hours') {
-            overlapClass = 'full-overlap';
-        } else if (
-            (category1 === 'working-hours' || category1 === 'flexible-hours') &&
-            (category2 === 'working-hours' || category2 === 'flexible-hours') &&
-            (category3 === 'working-hours' || category3 === 'flexible-hours')
-        ) {
-            overlapClass = 'partial-overlap';
+        if (showThirdTimezone) {
+            // Consider all three timezones
+            if (category1 === 'working-hours' && category2 === 'working-hours' && category3 === 'working-hours') {
+                overlapClass = 'full-overlap';
+            } else if (
+                (category1 === 'working-hours' || category1 === 'flexible-hours') &&
+                (category2 === 'working-hours' || category2 === 'flexible-hours') &&
+                (category3 === 'working-hours' || category3 === 'flexible-hours')
+            ) {
+                overlapClass = 'partial-overlap';
+            }
+        } else {
+            // Consider only two timezones
+            if (category1 === 'working-hours' && category2 === 'working-hours') {
+                overlapClass = 'full-overlap';
+            } else if (
+                (category1 === 'working-hours' || category1 === 'flexible-hours') &&
+                (category2 === 'working-hours' || category2 === 'flexible-hours')
+            ) {
+                overlapClass = 'partial-overlap';
+            }
         }
         
         // Create indicator block

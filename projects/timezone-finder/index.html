@@ -27,6 +27,17 @@
                 <div class="w3-white content-container">
                     <h2 class="w3-text-teal w3-center">Find Overlapping Meeting Times</h2>
                     
+                    <!-- Controls and options -->
+                    <div class="w3-row">
+                        <div class="w3-col s12" style="text-align: right; display: flex; align-items: center; justify-content: flex-end;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="showThirdTimezone" checked onchange="toggleThirdTimezone()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">Show third timezone</span>
+                        </div>
+                    </div>
+                    
                     <!-- Time Display with integrated timezone pickers -->
                     <div class="w3-row">
                         <div class="time-display">
