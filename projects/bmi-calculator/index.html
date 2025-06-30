@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BMI Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .content-container {
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        .result-container {
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .bmi-underweight {
+            background-color: #90CAF9; /* Light Blue */
+        }
+        .bmi-normal {
+            background-color: #A5D6A7; /* Light Green */
+        }
+        .bmi-overweight {
+            background-color: #FFCC80; /* Light Orange */
+        }
+        .bmi-obese {
+            background-color: #EF9A9A; /* Light Red */
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #009688; /* Teal */
+        }
+        .unit-selector {
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+            <a href="/resume.pdf" class="w3-bar-item w3-button" download="Sunil B N Resumé">Resumé</a>
+        </div>
+    </div>
+
+    <div class="w3-container w3-padding-32" style="background-color:#f5f5f5;">
+        <div class="w3-content" style="max-width:600px; padding:0 16px;">
+            <h2 class="w3-center">BMI Calculator</h2>
+            
+            <!-- Calculator Container -->
+            <div class="w3-card-4 w3-padding-16 content-container w3-round-large">
+                <!-- Unit Selector -->
+                <div class="unit-selector w3-center">
+                    <div class="w3-bar">
+                        <button class="w3-bar-item w3-button w3-teal" id="metricBtn">Metric</button>
+                        <button class="w3-bar-item w3-button" id="imperialBtn">Imperial</button>
+                    </div>
+                </div>
+                
+                <!-- Metric Inputs -->
+                <div id="metricInputs">
+                    <div class="input-group">
+                        <label class="input-label">Height (cm)</label>
+                        <input type="number" id="heightCm" class="w3-input w3-border w3-round" placeholder="e.g., 175" min="50" max="250">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Weight (kg)</label>
+                        <input type="number" id="weightKg" class="w3-input w3-border w3-round" placeholder="e.g., 70" min="20" max="500">
+                    </div>
+                </div>
+                
+                <!-- Imperial Inputs -->
+                <div id="imperialInputs" style="display:none;">
+                    <div class="input-group">
+                        <label class="input-label">Height</label>
+                        <div class="w3-row">
+                            <div class="w3-col m6 s6" style="padding-right:8px;">
+                                <input type="number" id="heightFt" class="w3-input w3-border w3-round" placeholder="feet" min="1" max="8">
+                                <small class="w3-text-grey">feet</small>
+                            </div>
+                            <div class="w3-col m6 s6" style="padding-left:8px;">
+                                <input type="number" id="heightIn" class="w3-input w3-border w3-round" placeholder="inches" min="0" max="11">
+                                <small class="w3-text-grey">inches</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Weight (lbs)</label>
+                        <input type="number" id="weightLbs" class="w3-input w3-border w3-round" placeholder="e.g., 154" min="40" max="1000">
+                    </div>
+                </div>
+                
+                <!-- Calculate Button -->
+                <button id="calculateBtn" class="w3-button w3-teal w3-block w3-round">Calculate BMI</button>
+                
+                <!-- Results -->
+                <div id="resultContainer" class="result-container" style="display:none;">
+                    <h3>Your BMI: <span id="bmiValue">0</span></h3>
+                    <p id="bmiCategory" class="w3-large"></p>
+                    <p id="bmiDescription" class="w3-small"></p>
+                    <div id="weightAdjustment" class="w3-panel w3-round-large w3-padding-16 w3-margin-top" style="display:none;">
+                        <p class="w3-medium"><strong>Weight Adjustment:</strong></p>
+                        <p id="weightChangeNeeded"></p>
+                        <p id="idealWeightRange" class="w3-small"></p>
+                    </div>
+                </div>
+                
+                <!-- BMI Information -->
+                <div class="w3-panel w3-pale-blue w3-leftbar w3-border-blue w3-round-large w3-margin-top">
+                    <p><strong>BMI Categories:</strong></p>
+                    <ul class="w3-ul">
+                        <li>Underweight: BMI less than 18.5</li>
+                        <li>Normal weight: BMI 18.5 to 24.9</li>
+                        <li>Overweight: BMI 25 to 29.9</li>
+                        <li>Obesity: BMI 30 or greater</li>
+                    </ul>
+                    <p class="w3-small w3-text-grey">Note: BMI is a screening tool and not diagnostic of body fatness or health.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const metricBtn = document.getElementById('metricBtn');
+            const imperialBtn = document.getElementById('imperialBtn');
+            const metricInputs = document.getElementById('metricInputs');
+            const imperialInputs = document.getElementById('imperialInputs');
+            const heightCm = document.getElementById('heightCm');
+            const weightKg = document.getElementById('weightKg');
+            const heightFt = document.getElementById('heightFt');
+            const heightIn = document.getElementById('heightIn');
+            const weightLbs = document.getElementById('weightLbs');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const bmiValue = document.getElementById('bmiValue');
+            const bmiCategory = document.getElementById('bmiCategory');
+            const bmiDescription = document.getElementById('bmiDescription');
+            
+            let currentUnit = 'metric';
+            
+            // Switch between metric and imperial
+            metricBtn.addEventListener('click', function() {
+                metricInputs.style.display = 'block';
+                imperialInputs.style.display = 'none';
+                metricBtn.classList.add('w3-teal');
+                imperialBtn.classList.remove('w3-teal');
+                currentUnit = 'metric';
+                resultContainer.style.display = 'none';
+            });
+            
+            imperialBtn.addEventListener('click', function() {
+                metricInputs.style.display = 'none';
+                imperialInputs.style.display = 'block';
+                metricBtn.classList.remove('w3-teal');
+                imperialBtn.classList.add('w3-teal');
+                currentUnit = 'imperial';
+                resultContainer.style.display = 'none';
+            });
+            
+            // Calculate BMI
+            calculateBtn.addEventListener('click', function() {
+                let bmi = 0;
+                let isValid = true;
+                
+                if (currentUnit === 'metric') {
+                    const height = parseFloat(heightCm.value);
+                    const weight = parseFloat(weightKg.value);
+                    
+                    if (!height || !weight || height <= 0 || weight <= 0) {
+                        alert('Please enter valid height and weight values.');
+                        isValid = false;
+                    } else {
+                        // BMI = weight(kg) / (height(m))²
+                        bmi = weight / ((height / 100) * (height / 100));
+                    }
+                } else {
+                    const feet = parseFloat(heightFt.value) || 0;
+                    const inches = parseFloat(heightIn.value) || 0;
+                    const weight = parseFloat(weightLbs.value);
+                    
+                    if (!weight || weight <= 0 || (feet <= 0 && inches <= 0)) {
+                        alert('Please enter valid height and weight values.');
+                        isValid = false;
+                    } else {
+                        // Convert height to inches
+                        const totalInches = (feet * 12) + inches;
+                        // BMI = (weight(lbs) / (height(in))²) * 703
+                        bmi = (weight / (totalInches * totalInches)) * 703;
+                    }
+                }
+                
+                if (isValid) {
+                    displayResults(bmi);
+                }
+            });
+            
+            // Display BMI results
+            function displayResults(bmi) {
+                // Round to 1 decimal place
+                bmi = Math.round(bmi * 10) / 10;
+                
+                // Update BMI value
+                bmiValue.textContent = bmi;
+                
+                // Determine BMI category and description
+                let category = '';
+                let description = '';
+                let colorClass = '';
+                
+                if (bmi < 18.5) {
+                    category = 'Underweight';
+                    description = 'You may need to gain some weight. Consult with a healthcare provider.';
+                    colorClass = 'bmi-underweight';
+                } else if (bmi >= 18.5 && bmi < 25) {
+                    category = 'Normal weight';
+                    description = 'You have a healthy weight. Maintain it with balanced diet and regular exercise.';
+                    colorClass = 'bmi-normal';
+                } else if (bmi >= 25 && bmi < 30) {
+                    category = 'Overweight';
+                    description = 'You may benefit from losing some weight. Consider healthy lifestyle changes.';
+                    colorClass = 'bmi-overweight';
+                } else {
+                    category = 'Obese';
+                    description = 'For health reasons, you should consider losing weight. Consult with a healthcare provider.';
+                    colorClass = 'bmi-obese';
+                }
+                
+                // Update display
+                bmiCategory.textContent = category;
+                bmiDescription.textContent = description;
+                
+                // Remove all color classes and add the appropriate one
+                resultContainer.classList.remove('bmi-underweight', 'bmi-normal', 'bmi-overweight', 'bmi-obese');
+                resultContainer.classList.add(colorClass);
+                
+                // Calculate weight adjustment needed
+                calculateWeightAdjustment(bmi);
+                
+                // Show results
+                resultContainer.style.display = 'block';
+            }
+            
+            // Calculate and display weight adjustment needed
+            function calculateWeightAdjustment(bmi) {
+                const weightAdjustmentDiv = document.getElementById('weightAdjustment');
+                const weightChangeNeeded = document.getElementById('weightChangeNeeded');
+                const idealWeightRange = document.getElementById('idealWeightRange');
+                
+                let currentWeight, height, idealWeightLower, idealWeightUpper, weightToChange;
+                
+                if (currentUnit === 'metric') {
+                    height = parseFloat(heightCm.value) / 100; // convert to meters
+                    currentWeight = parseFloat(weightKg.value);
+                    
+                    // Calculate ideal weight range (BMI 18.5 - 24.9)
+                    idealWeightLower = Math.round(18.5 * height * height);
+                    idealWeightUpper = Math.round(24.9 * height * height);
+                    
+                    if (bmi < 18.5) {
+                        // Need to gain weight
+                        weightToChange = idealWeightLower - currentWeight;
+                        weightChangeNeeded.innerHTML = `You need to <strong>gain ${Math.abs(weightToChange).toFixed(1)} kg</strong> to reach a healthy BMI.`;
+                        weightAdjustmentDiv.className = 'w3-panel w3-round-large w3-padding-16 w3-margin-top w3-pale-blue';
+                    } else if (bmi > 24.9) {
+                        // Need to lose weight
+                        weightToChange = currentWeight - idealWeightUpper;
+                        weightChangeNeeded.innerHTML = `You need to <strong>lose ${weightToChange.toFixed(1)} kg</strong> to reach a healthy BMI.`;
+                        weightAdjustmentDiv.className = 'w3-panel w3-round-large w3-padding-16 w3-margin-top w3-pale-red';
+                    } else {
+                        // Weight is normal
+                        weightChangeNeeded.innerHTML = `<strong>Your weight is within the healthy range.</strong>`;
+                        weightAdjustmentDiv.className = 'w3-panel w3-round-large w3-padding-16 w3-margin-top w3-pale-green';
+                    }
+                    
+                    idealWeightRange.textContent = `Ideal weight range for your height: ${idealWeightLower} - ${idealWeightUpper} kg`;
+                } else {
+                    // Imperial calculations
+                    const feet = parseFloat(heightFt.value) || 0;
+                    const inches = parseFloat(heightIn.value) || 0;
+                    const totalInches = (feet * 12) + inches;
+                    currentWeight = parseFloat(weightLbs.value);
+                    
+                    // Calculate ideal weight range (BMI 18.5 - 24.9)
+                    idealWeightLower = Math.round((18.5 * totalInches * totalInches) / 703);
+                    idealWeightUpper = Math.round((24.9 * totalInches * totalInches) / 703);
+                    
+                    if (bmi < 18.5) {
+                        // Need to gain weight
+                        weightToChange = idealWeightLower - currentWeight;
+                        weightChangeNeeded.innerHTML = `You need to <strong>gain ${Math.abs(weightToChange).toFixed(1)} lbs</strong> to reach a healthy BMI.`;
+                        weightAdjustmentDiv.className = 'w3-panel w3-round-large w3-padding-16 w3-margin-top w3-pale-blue';
+                    } else if (bmi > 24.9) {
+                        // Need to lose weight
+                        weightToChange = currentWeight - idealWeightUpper;
+                        weightChangeNeeded.innerHTML = `You need to <strong>lose ${weightToChange.toFixed(1)} lbs</strong> to reach a healthy BMI.`;
+                        weightAdjustmentDiv.className = 'w3-panel w3-round-large w3-padding-16 w3-margin-top w3-pale-red';
+                    } else {
+                        // Weight is normal
+                        weightChangeNeeded.innerHTML = `<strong>Your weight is within the healthy range.</strong>`;
+                        weightAdjustmentDiv.className = 'w3-panel w3-round-large w3-padding-16 w3-margin-top w3-pale-green';
+                    }
+                    
+                    idealWeightRange.textContent = `Ideal weight range for your height: ${idealWeightLower} - ${idealWeightUpper} lbs`;
+                }
+                
+                weightAdjustmentDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

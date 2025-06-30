@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .password-display {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            font-size: 1.2em;
+            padding: 8px 12px;
+            background-color: #f9f9f9;
+        }
+        .content-container {
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+            <a href="/resume.pdf" class="w3-bar-item w3-button" download="Sunil B N Resumé">Resumé</a>
+        </div>
+    </div>
+
+    <div class="w3-container w3-padding-32" style="background-color:#f5f5f5;">
+        <div class="w3-content" style="max-width:600px; padding:0 16px;">
+            <h2 class="w3-center">Password Generator</h2>
+            
+            <!-- Password Display -->
+            <div class="w3-card-4 w3-padding-16 w3-margin-bottom content-container w3-round-large">
+                <div class="w3-row">
+                    <div class="w3-col s10">
+                        <input type="text" id="password" class="w3-input w3-border-0 password-display" readonly>
+                    </div>
+                    <div class="w3-col s2">
+                        <button id="copyBtn" class="w3-button w3-teal w3-block" title="Copy to clipboard">
+                            <i class="fa fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings -->
+            <div class="w3-card-4 w3-padding-16 content-container w3-round-large">
+                <div class="w3-row-padding">
+                    <div class="w3-col s12 m6">
+                        <label class="w3-text-teal">Password Length</label>
+                        <input type="range" id="length" min="8" max="50" value="16" class="w3-input w3-border">
+                        <div class="w3-small w3-text-grey"><span id="lengthValue">16</span> characters</div>
+                    </div>
+                    <div class="w3-col s12 m6">
+                        <label class="w3-text-teal">Character Types</label><br>
+                        <input type="checkbox" id="uppercase" class="w3-check" checked>
+                        <label>Uppercase (A-Z)</label><br>
+                        <input type="checkbox" id="lowercase" class="w3-check" checked>
+                        <label>Lowercase (a-z)</label><br>
+                        <input type="checkbox" id="numbers" class="w3-check" checked>
+                        <label>Numbers (0-9)</label><br>
+                        <input type="checkbox" id="symbols" class="w3-check">
+                        <label>Symbols (!@#$%^&*)</label>
+                    </div>
+                </div>
+                
+                <div class="w3-padding-16">
+                    <button id="generateBtn" class="w3-button w3-teal w3-block w3-large">
+                        Generate Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const passwordEl = document.getElementById('password');
+            const lengthEl = document.getElementById('length');
+            const lengthValueEl = document.getElementById('lengthValue');
+            const uppercaseEl = document.getElementById('uppercase');
+            const lowercaseEl = document.getElementById('lowercase');
+            const numbersEl = document.getElementById('numbers');
+            const symbolsEl = document.getElementById('symbols');
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const strengthMeter = document.getElementById('strengthMeter');
+
+            // Character sets
+            const UPPERCASE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const LOWERCASE_CHARS = 'abcdefghijklmnopqrstuvwxyz';
+            const NUMBER_CHARS = '0123456789';
+            const SYMBOL_CHARS = '!@#$%^&*()_+~`|}{[]\:;?><,./-=';
+
+            // Update length display
+            lengthEl.addEventListener('input', function() {
+                lengthValueEl.textContent = this.value;
+            });
+
+            // Generate password
+            function generatePassword() {
+                let chars = '';
+                let password = '';
+                
+                // Build character set based on selected options
+                if (uppercaseEl.checked) chars += UPPERCASE_CHARS;
+                if (lowercaseEl.checked) chars += LOWERCASE_CHARS;
+                if (numbersEl.checked) chars += NUMBER_CHARS;
+                if (symbolsEl.checked) chars += SYMBOL_CHARS;
+                
+                // If no character type is selected, use all
+                if (!chars) {
+                    chars = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBER_CHARS + SYMBOL_CHARS;
+                    // Update checkboxes to reflect this
+                    uppercaseEl.checked = true;
+                    lowercaseEl.checked = true;
+                    numbersEl.checked = true;
+                    symbolsEl.checked = true;
+                }
+                
+                // Generate password
+                for (let i = 0; i < lengthEl.value; i++) {
+                    const randomIndex = Math.floor(Math.random() * chars.length);
+                    password += chars[randomIndex];
+                }
+                
+                return password;
+            }
+
+            // Update password strength meter
+            function updateStrengthMeter(password) {
+                let strength = 0;
+                const length = password.length;
+                
+                // Length check
+                if (length >= 12) strength += 2;
+                else if (length >= 8) strength += 1;
+                
+                // Character type checks
+                if (password.match(/[a-z]+/)) strength += 1;
+                if (password.match(/[A-Z]+/)) strength += 1;
+                if (password.match(/[0-9]+/)) strength += 1;
+                if (password.match(/[^a-zA-Z0-9]+/)) strength += 1;
+                
+                // We've removed the strength meter visual display
+                // But we'll still calculate the strength for future use if needed
+                let strengthLevel;
+                switch(strength) {
+                    case 0:
+                    case 1:
+                        strengthLevel = 'weak';
+                        break;
+                    case 2:
+                        strengthLevel = 'medium';
+                        break;
+                    case 3:
+                        strengthLevel = 'strong';
+                        break;
+                    case 4:
+                    case 5:
+                        strengthLevel = 'very-strong';
+                        break;
+                    default:
+                        strengthLevel = 'unknown';
+                }
+                
+                // Store strength as a data attribute if needed later
+                passwordEl.dataset.strength = strengthLevel;
+            }
+
+            // Generate button click handler
+            generateBtn.addEventListener('click', function() {
+                const password = generatePassword();
+                passwordEl.value = password;
+                updateStrengthMeter(password);
+            });
+            
+            // Copy to clipboard
+            copyBtn.addEventListener('click', function() {
+                if (!passwordEl.value) return;
+                
+                passwordEl.select();
+                document.execCommand('copy');
+                
+                // Visual feedback
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fa fa-check"></i>';
+                copyBtn.classList.add('w3-green');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.classList.remove('w3-green');
+                }, 2000);
+            });
+            
+            // Generate a password on page load
+            generateBtn.click();
+        });
+    </script>
+</body>
+</html>

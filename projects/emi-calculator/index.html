@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EMI Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .content-container {
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        .result-box {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.2em;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .slider-container {
+            margin-bottom: 16px;
+        }
+        .slider-value {
+            font-weight: bold;
+            color: #009688;
+        }
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+            <a href="/resume.pdf" class="w3-bar-item w3-button" download="Sunil B N Resumé">Resumé</a>
+        </div>
+    </div>
+
+    <div class="w3-container w3-padding-32" style="background-color:#f5f5f5;">
+        <div class="w3-content" style="max-width:800px; padding:0 16px;">
+            <h2 class="w3-center">EMI Calculator</h2>
+            
+            <div class="w3-row-padding">
+                <!-- Input Section -->
+                <div class="w3-col m6">
+                    <div class="w3-card-4 w3-padding-16 content-container w3-round-large w3-margin-bottom">
+                        <h4>Loan Details</h4>
+                        
+                        <!-- Currency Selection -->
+                        <div class="w3-margin-bottom">
+                            <label class="w3-text-teal">Currency</label>
+                            <select id="currencySelect" class="w3-select w3-border w3-round" onchange="calculateEMI()">
+                                <option value="₹" selected>Indian Rupee (₹)</option>
+                                <option value="$">US Dollar ($)</option>
+                                <option value="€">Euro (€)</option>
+                                <option value="£">British Pound (£)</option>
+                                <option value="¥">Japanese Yen (¥)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Loan Amount -->
+                        <div class="slider-container">
+                            <label class="w3-text-teal">Loan Amount</label>
+                            <input type="range" id="loanAmount" min="10000" max="100000000" step="10000" value="1000000" class="w3-input w3-border w3-round">
+                            <div class="w3-row w3-margin-top">
+                                <div class="w3-col s12">
+                                    <div class="w3-input w3-border w3-round" style="padding: 4px; display: flex; align-items: center;">
+                                        <span id="currencySymbol" style="margin-right: 5px;">₹</span>
+                                        <input type="text" id="loanAmountInput" value="1000000" style="width: 90%; border: none; outline: none;" oninput="updateLoanAmount(this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Interest Rate -->
+                        <div class="slider-container">
+                            <label class="w3-text-teal">Interest Rate (% per annum)</label>
+                            <input type="range" id="interestRate" min="1" max="20" step="0.1" value="10" class="w3-input w3-border w3-round">
+                            <div class="w3-row w3-margin-top">
+                                <div class="w3-col s12">
+                                    <div class="w3-input w3-border w3-round" style="padding: 4px; display: flex; align-items: center;">
+                                        <input type="text" id="interestRateInput" value="10.0" style="width: 90%; border: none; outline: none;" oninput="updateInterestRate(this.value)">
+                                        <span style="margin-left: 5px;">%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Loan Tenure -->
+                        <div class="slider-container">
+                            <label class="w3-text-teal">Loan Tenure (years)</label>
+                            <input type="range" id="loanTenure" min="1" max="30" step="1" value="20" class="w3-input w3-border w3-round">
+                            <div class="w3-row w3-margin-top">
+                                <div class="w3-col s12">
+                                    <div class="w3-input w3-border w3-round" style="padding: 4px; display: flex; align-items: center;">
+                                        <input type="text" id="loanTenureInput" value="20" style="width: 90%; border: none; outline: none;" oninput="updateLoanTenure(this.value)">
+                                        <span style="margin-left: 5px;">years</span>
+                                    </div>
+                                    <div class="w3-small w3-margin-top">(<span id="loanTenureMonths">240</span> months)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="w3-padding-16">
+                            <button id="calculateBtn" class="w3-button w3-teal w3-block w3-large">
+                                Recalculate EMI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div class="w3-col m6">
+                    <div class="w3-card-4 w3-padding-16 content-container w3-round-large">
+                        <h4>EMI Results</h4>
+                        
+                        <!-- Monthly EMI -->
+                        <div class="w3-margin-bottom">
+                            <label class="w3-text-teal">Monthly EMI</label>
+                            <div id="monthlyEmi" class="result-box w3-padding w3-light-grey w3-center w3-large w3-text-teal">₹ 9,650</div>
+                        </div>
+                        
+                        <!-- Loan Breakdown -->
+                        <div class="w3-margin-bottom">
+                            <label class="w3-text-teal">Loan Breakdown</label>
+                            <div class="w3-padding w3-light-grey">
+                                <div class="breakdown-item">
+                                    <span>Principal Amount</span>
+                                    <span id="principalAmount">₹ 1,000,000</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span>Total Interest</span>
+                                    <span id="totalInterest">₹ 1,316,074</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span>Total Amount</span>
+                                    <span id="totalAmount">₹ 2,316,074</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Interest to Principal Ratio -->
+                        <div>
+                            <label class="w3-text-teal">Interest to Principal Ratio</label>
+                            <div class="w3-light-grey w3-round-large" style="position: relative; height: 24px;">
+                                <div id="principalBar" class="w3-container w3-teal w3-round-large" style="width:43%; height: 100%; position: relative; z-index: 1;">
+                                    <span style="position: absolute; left: 8px; color: white;">43%</span>
+                                </div>
+                                <div id="interestBar" class="w3-container w3-orange w3-round-large" style="width:57%; height: 100%; position: absolute; right: 0; top: 0;">
+                                    <span style="position: absolute; right: 8px; color: white;">57%</span>
+                                </div>
+                            </div>
+                            <div class="w3-tiny w3-margin-top w3-margin-bottom">
+                                <span class="w3-tag w3-teal">Principal</span>
+                                <span class="w3-tag w3-orange w3-right">Interest</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Amortization Schedule (Optional) -->
+            <div class="w3-card-4 w3-padding-16 content-container w3-round-large w3-margin-top">
+                <div class="w3-row">
+                    <div class="w3-col s12">
+                        <h4 class="w3-center">Amortization Schedule</h4>
+                        <p class="w3-small w3-text-grey w3-center">Showing first 12 months</p>
+                        <div style="overflow-x:auto;">
+                            <table class="w3-table w3-striped w3-bordered">
+                                <thead>
+                                    <tr class="w3-teal">
+                                        <th>Month</th>
+                                        <th>EMI</th>
+                                        <th>Principal</th>
+                                        <th>Interest</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="amortizationTable">
+                                    <!-- Will be filled by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Global variables and functions for inline event handlers
+        let currentCurrencySymbol = '₹';
+        let loanAmountEl, loanAmountInputEl, interestRateEl, interestRateInputEl;
+        let loanTenureEl, loanTenureInputEl, loanTenureMonthsEl;
+        let monthlyEmiEl, principalAmountEl, totalInterestEl, totalAmountEl;
+        let principalBarEl, interestBarEl, amortizationTableEl;
+        
+        // Generate amortization schedule
+        function generateAmortizationSchedule(principal, monthlyInterestRate, tenure, emi) {
+            // Clear existing table
+            amortizationTableEl.innerHTML = '';
+            
+            let balance = principal;
+            let totalInterestPaid = 0;
+            
+            // Generate first 12 months of the schedule
+            for (let month = 1; month <= Math.min(12, tenure); month++) {
+                // Calculate interest for this month
+                const interestForMonth = balance * monthlyInterestRate;
+                
+                // Calculate principal for this month
+                const principalForMonth = emi - interestForMonth;
+                
+                // Update balance
+                balance -= principalForMonth;
+                
+                // Update total interest paid
+                totalInterestPaid += interestForMonth;
+                
+                // Create table row
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${month}</td>
+                    <td>${currentCurrencySymbol} ${formatCurrency(emi)}</td>
+                    <td>${currentCurrencySymbol} ${formatCurrency(principalForMonth)}</td>
+                    <td>${currentCurrencySymbol} ${formatCurrency(interestForMonth)}</td>
+                    <td>${currentCurrencySymbol} ${formatCurrency(Math.max(0, balance))}</td>
+                `;
+                
+                // Add row to table
+                amortizationTableEl.appendChild(row);
+            }
+        }
+        
+        // Function to update loan amount from input field
+        function updateLoanAmount(value) {
+            // Handle empty values
+            if (value === '') {
+                // Still update EMI with the current slider value
+                calculateEMI();
+                return;
+            }
+            
+            // Remove commas and other non-numeric characters
+            const cleanValue = value.replace(/[^0-9]/g, '');
+            const numValue = parseInt(cleanValue) || 10000;
+            
+            // Ensure value is within range
+            const finalValue = Math.min(Math.max(numValue, 10000), 100000000);
+            
+            // Always update the slider to reflect the current value
+            loanAmountEl.value = finalValue;
+            
+            // Only update the input field if the value has changed significantly
+            // to avoid cursor jumping during typing
+            if (Math.abs(finalValue - parseInt(loanAmountInputEl.value.replace(/[^0-9]/g, '') || '0')) > 100) {
+                loanAmountInputEl.value = finalValue;
+            }
+            
+            // Always recalculate EMI
+            calculateEMI();
+        }
+        
+        // Function to update interest rate from input field
+        function updateInterestRate(value) {
+            // Handle empty values
+            if (value === '') {
+                // Still update EMI with the current slider value
+                calculateEMI();
+                return;
+            }
+            
+            // Remove non-numeric characters except decimal point
+            const cleanValue = value.replace(/[^0-9.]/g, '');
+            const numValue = parseFloat(cleanValue) || 1.0;
+            
+            // Ensure value is within range
+            const finalValue = Math.min(Math.max(numValue, 1.0), 20.0);
+            
+            // Always update the slider to reflect the current value
+            interestRateEl.value = finalValue;
+            
+            // Only update the input field if the value has changed significantly
+            // to avoid cursor jumping during typing
+            if (Math.abs(finalValue - parseFloat(interestRateInputEl.value || '0')) > 0.1) {
+                interestRateInputEl.value = finalValue.toFixed(1);
+            }
+            
+            // Always recalculate EMI
+            calculateEMI();
+        }
+        
+        // Function to update loan tenure from input field
+        function updateLoanTenure(value) {
+            // Handle empty values
+            if (value === '') {
+                // Still update EMI with the current slider value
+                calculateEMI();
+                return;
+            }
+            
+            // Remove non-numeric characters
+            const cleanValue = value.replace(/[^0-9]/g, '');
+            const numValue = parseInt(cleanValue) || 1;
+            
+            // Ensure value is within range
+            const finalValue = Math.min(Math.max(numValue, 1), 30);
+            
+            // Always update the slider to reflect the current value
+            loanTenureEl.value = finalValue;
+            
+            // Only update the input field if the value has changed significantly
+            // to avoid cursor jumping during typing
+            if (Math.abs(finalValue - parseInt(loanTenureInputEl.value || '0')) > 0) {
+                loanTenureInputEl.value = finalValue;
+            }
+            
+            // Update months
+            const months = finalValue * 12;
+            loanTenureMonthsEl.textContent = months;
+            
+            // Always recalculate EMI
+            calculateEMI();
+        }
+        
+        // Format number as currency
+        function formatCurrency(number) {
+            return new Intl.NumberFormat('en-IN', {
+                maximumFractionDigits: 0
+            }).format(number);
+        }
+        
+        // Calculate EMI function
+        function calculateEMI() {
+            // Get values
+            const principal = parseFloat(loanAmountEl.value);
+            const interestRate = parseFloat(interestRateEl.value) / 100 / 12; // Monthly interest rate
+            const tenure = parseInt(loanTenureEl.value) * 12; // Tenure in months
+
+            // Calculate EMI
+            const emi = principal * interestRate * Math.pow(1 + interestRate, tenure) / (Math.pow(1 + interestRate, tenure) - 1);
+            
+            // Calculate total amount and interest
+            const totalAmount = emi * tenure;
+            const totalInterest = totalAmount - principal;
+            
+            // Calculate percentages for the progress bars
+            const principalPercentage = Math.round((principal / totalAmount) * 100);
+            const interestPercentage = 100 - principalPercentage;
+            
+            // Update UI
+            monthlyEmiEl.textContent = `${currentCurrencySymbol} ${formatCurrency(emi)}`;
+            principalAmountEl.textContent = `${currentCurrencySymbol} ${formatCurrency(principal)}`;
+            totalInterestEl.textContent = `${currentCurrencySymbol} ${formatCurrency(totalInterest)}`;
+            totalAmountEl.textContent = `${currentCurrencySymbol} ${formatCurrency(totalAmount)}`;
+            
+            // Update the ratio bars
+            principalBarEl.style.width = `${principalPercentage}%`;
+            principalBarEl.querySelector('span').textContent = `${principalPercentage}%`;
+            interestBarEl.style.width = `${interestPercentage}%`;
+            interestBarEl.querySelector('span').textContent = `${interestPercentage}%`;
+            
+            // Generate amortization schedule
+            generateAmortizationSchedule(principal, interestRate, tenure, emi);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize global elements
+            const currencySelectEl = document.getElementById('currencySelect');
+            const currencySymbolEl = document.getElementById('currencySymbol');
+            loanAmountEl = document.getElementById('loanAmount');
+            loanAmountInputEl = document.getElementById('loanAmountInput');
+            interestRateEl = document.getElementById('interestRate');
+            interestRateInputEl = document.getElementById('interestRateInput');
+            loanTenureEl = document.getElementById('loanTenure');
+            loanTenureInputEl = document.getElementById('loanTenureInput');
+            loanTenureMonthsEl = document.getElementById('loanTenureMonths');
+            const calculateBtn = document.getElementById('calculateBtn');
+            monthlyEmiEl = document.getElementById('monthlyEmi');
+            principalAmountEl = document.getElementById('principalAmount');
+            totalInterestEl = document.getElementById('totalInterest');
+            totalAmountEl = document.getElementById('totalAmount');
+            principalBarEl = document.getElementById('principalBar');
+            interestBarEl = document.getElementById('interestBar');
+            amortizationTableEl = document.getElementById('amortizationTable');
+            
+            // Initialize currency symbol
+            currentCurrencySymbol = '₹';
+            
+            // Functions are now defined globally
+            
+            // Interest rate function is now defined globally
+
+            // Format number as currency
+            function formatCurrency(number) {
+                return new Intl.NumberFormat('en-IN', {
+                    maximumFractionDigits: 0
+                }).format(number);
+            }
+
+            // Currency selection change handler
+            currencySelectEl.addEventListener('change', function() {
+                currentCurrencySymbol = this.value;
+                currencySymbolEl.textContent = currentCurrencySymbol;
+                calculateEMI();
+            });
+            
+            // Update input value displays
+            loanAmountEl.addEventListener('input', function() {
+                const value = this.value;
+                loanAmountInputEl.value = value;
+                calculateEMI();
+            });
+
+            interestRateEl.addEventListener('input', function() {
+                const value = parseFloat(this.value).toFixed(1);
+                interestRateInputEl.value = value;
+                calculateEMI();
+            });
+
+            loanTenureEl.addEventListener('input', function() {
+                const years = parseInt(this.value);
+                const months = years * 12;
+                loanTenureInputEl.value = years;
+                loanTenureMonthsEl.textContent = months;
+                calculateEMI();
+            });
+            
+            // Function to update loan tenure from input field
+            function updateLoanTenure(value) {
+                // Don't process empty values immediately
+                if (value === '') return;
+                
+                // Remove non-numeric characters
+                const cleanValue = value.replace(/[^0-9]/g, '');
+                const numValue = parseInt(cleanValue) || 1;
+                
+                // Ensure value is within range
+                const finalValue = Math.min(Math.max(numValue, 1), 30);
+                
+                // Update slider
+                loanTenureEl.value = finalValue;
+                
+                // Only update the input field if the value has changed significantly
+                // to avoid cursor jumping during typing
+                if (Math.abs(finalValue - parseInt(loanTenureInputEl.value || '0')) > 0) {
+                    loanTenureInputEl.value = finalValue;
+                }
+                
+                // Update months
+                const months = finalValue * 12;
+                loanTenureMonthsEl.textContent = months;
+                
+                // Recalculate EMI
+                calculateEMI();
+            };
+
+            // Calculate EMI function
+            function calculateEMI() {
+                // Get values
+                const principal = parseFloat(loanAmountEl.value);
+                const interestRate = parseFloat(interestRateEl.value) / 100 / 12; // Monthly interest rate
+                const tenure = parseInt(loanTenureEl.value) * 12; // Tenure in months
+
+                // Calculate EMI
+                const emi = principal * interestRate * Math.pow(1 + interestRate, tenure) / (Math.pow(1 + interestRate, tenure) - 1);
+                
+                // Calculate total amount and interest
+                const totalAmount = emi * tenure;
+                const totalInterest = totalAmount - principal;
+                
+                // Calculate percentages for the progress bars
+                const principalPercentage = Math.round((principal / totalAmount) * 100);
+                const interestPercentage = 100 - principalPercentage;
+                
+                // Update UI
+                monthlyEmiEl.textContent = `${currentCurrencySymbol} ${formatCurrency(emi)}`;
+                principalAmountEl.textContent = `${currentCurrencySymbol} ${formatCurrency(principal)}`;
+                totalInterestEl.textContent = `${currentCurrencySymbol} ${formatCurrency(totalInterest)}`;
+                totalAmountEl.textContent = `${currentCurrencySymbol} ${formatCurrency(totalAmount)}`;
+                
+                // Update the ratio bars
+                principalBarEl.style.width = `${principalPercentage}%`;
+                principalBarEl.querySelector('span').textContent = `${principalPercentage}%`;
+                interestBarEl.style.width = `${interestPercentage}%`;
+                interestBarEl.querySelector('span').textContent = `${interestPercentage}%`;
+                
+                // Generate amortization schedule
+                generateAmortizationSchedule(principal, interestRate, tenure, emi);
+            }
+
+            // Amortization schedule function is now defined globally
+
+            // Initial calculation
+            calculateEMI();
+            
+            // Calculate button click handler
+            calculateBtn.addEventListener('click', calculateEMI);
+        });
+    </script>
+</body>
+</html>
