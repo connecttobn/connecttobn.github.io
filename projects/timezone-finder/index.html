@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Timezone Meeting Finder</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+            <a href="/resume.pdf" class="w3-bar-item w3-button" download="Sunil B N Resumé">Resumé</a>
+        </div>
+    </div>
+
+    <div class="w3-container w3-margin">
+        <div class="w3-row">
+            <div class="w3-col m10 l10 s12 w3-center" style="float:none; margin:0 auto;">
+                <div class="w3-white content-container">
+                    <h2 class="w3-text-teal w3-center">Find Overlapping Meeting Times</h2>
+                    
+                    <!-- Time Display with integrated timezone pickers -->
+                    <div class="w3-row">
+                        <div class="time-display">
+                            <!-- Timezone 1 Row with Picker -->
+                            <div class="time-row-container tz">
+                                <div class="timezone-picker">
+                                    <select id="timezone1" class="w3-select w3-border w3-round" onchange="updateDisplay()">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div id="timezone1Display" class="time-row">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <!-- Timezone 2 Row with Picker -->
+                            <div class="time-row-container tz">
+                                <div class="timezone-picker">
+                                    <select id="timezone2" class="w3-select w3-border w3-round" onchange="updateDisplay()">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div id="timezone2Display" class="time-row">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <!-- Timezone 3 Row with Picker -->
+                            <div class="time-row-container tz">
+                                <div class="timezone-picker">
+                                    <select id="timezone3" class="w3-select w3-border w3-round" onchange="updateDisplay()">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div id="timezone3Display" class="time-row">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <!-- Vertical Time Slider -->
+                            <div id="timeSlider" class="time-slider">
+                                <div class="slider-handle"></div>
+                            </div>
+                            
+                            <!-- Overlap Indicator Row -->
+                            <div class="time-row-container">
+                                <div class="timezone-picker overlap-label">
+                                    <strong>Overlap</strong>
+                                </div>
+                                <div id="overlapIndicator" class="time-row" style="height: 45px;">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="w3-row w3-margin-top">
+                        <div class="w3-col s12" style="text-align: left;">
+                            <div class="w3-panel w3-pale-blue w3-leftbar w3-border-blue">
+                                <p><strong>Color Legend:</strong></p>
+                                <p>
+                                    <span class="w3-tag" style="background-color: rgba(76, 175, 80, 0.3); color: black;">Green (9 AM - 5 PM)</span>: Standard working hours<br>
+                                    <span class="w3-tag" style="background-color: rgba(255, 235, 59, 0.3); color: black;">Yellow (6 AM - 9 AM, 5 PM - 10 PM)</span>: Flexible hours<br>
+                                    <span class="w3-tag" style="background-color: rgba(244, 67, 54, 0.3); color: black;">Light Red (10 PM - 6 AM)</span>: Off hours
+                                </p>
+                                <p>Red vertical lines indicate the current time in each timezone.</p>
+                                <p>The bottom row shows overlapping times across all selected timezones.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
