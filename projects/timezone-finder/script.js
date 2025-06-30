@@ -554,22 +554,45 @@ function updateOverlapIndicator(timezone1, timezone2, timezone3) {
         if (showThirdTimezone) {
             // Consider all three timezones
             if (category1 === 'working-hours' && category2 === 'working-hours' && category3 === 'working-hours') {
+                // All working hours - full green
                 overlapClass = 'full-overlap';
             } else if (
+                // At least one working hour and the rest are flexible
+                ((category1 === 'working-hours' && (category2 === 'flexible-hours' || category3 === 'flexible-hours')) ||
+                (category2 === 'working-hours' && (category1 === 'flexible-hours' || category3 === 'flexible-hours')) ||
+                (category3 === 'working-hours' && (category1 === 'flexible-hours' || category2 === 'flexible-hours'))) &&
+                // None are off hours
+                category1 !== 'off-hours' && category2 !== 'off-hours' && category3 !== 'off-hours'
+            ) {
+                // Mix of working and flexible - light green
+                overlapClass = 'good-overlap';
+            } else if (
+                // All are at least flexible hours
                 (category1 === 'working-hours' || category1 === 'flexible-hours') &&
                 (category2 === 'working-hours' || category2 === 'flexible-hours') &&
                 (category3 === 'working-hours' || category3 === 'flexible-hours')
             ) {
+                // All flexible - yellow
                 overlapClass = 'partial-overlap';
             }
         } else {
             // Consider only two timezones
             if (category1 === 'working-hours' && category2 === 'working-hours') {
+                // Both working hours - full green
                 overlapClass = 'full-overlap';
             } else if (
+                // One working hour and one flexible
+                ((category1 === 'working-hours' && category2 === 'flexible-hours') ||
+                (category2 === 'working-hours' && category1 === 'flexible-hours'))
+            ) {
+                // Mix of working and flexible - light green
+                overlapClass = 'good-overlap';
+            } else if (
+                // Both are at least flexible hours
                 (category1 === 'working-hours' || category1 === 'flexible-hours') &&
                 (category2 === 'working-hours' || category2 === 'flexible-hours')
             ) {
+                // Both flexible - yellow
                 overlapClass = 'partial-overlap';
             }
         }
