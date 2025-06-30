@@ -1,9 +1,5 @@
  // Global variables
-let formats = {
-   1: '12-hour',
-   2: '12-hour',
-   3: '12-hour'
-};
+let timeFormat = '12-hour'; // Single time format for all timezones
 
 // Variable to track third timezone visibility
 let showThirdTimezone = true;
@@ -16,9 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Then initialize select2 after timezoneObjects is defined
     initializeSelect2();
     
-    // Set initial state of third timezone based on checkbox
-    showThirdTimezone = document.getElementById('showThirdTimezone').checked;
-    toggleThirdTimezone();
+    // Load saved preferences from localStorage
+    loadSavedPreferences();
     
     // Update display and initialize slider
     updateDisplay();
@@ -28,8 +23,39 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateCurrentTimeMarkers, 60000);
 });
 
+// Load saved preferences from localStorage
+function loadSavedPreferences() {
+    // Load time format preference
+    const savedTimeFormat = localStorage.getItem('timeFormat');
+    if (savedTimeFormat) {
+        timeFormat = savedTimeFormat;
+    }
+    
+    // Load third timezone visibility preference
+    const savedShowThirdTimezone = localStorage.getItem('showThirdTimezone');
+    if (savedShowThirdTimezone !== null) {
+        showThirdTimezone = savedShowThirdTimezone === 'true';
+        document.getElementById('showThirdTimezone').checked = showThirdTimezone;
+    } else {
+        showThirdTimezone = document.getElementById('showThirdTimezone').checked;
+    }
+    toggleThirdTimezone(false); // Don't update display yet as we're still loading preferences
+    
+    // Load saved timezone selections
+    const savedTimezone1 = localStorage.getItem('timezone1');
+    const savedTimezone2 = localStorage.getItem('timezone2');
+    const savedTimezone3 = localStorage.getItem('timezone3');
+    
+    if (savedTimezone1) document.getElementById('timezone1').value = savedTimezone1;
+    if (savedTimezone2) document.getElementById('timezone2').value = savedTimezone2;
+    if (savedTimezone3) document.getElementById('timezone3').value = savedTimezone3;
+    
+    // Update Select2 to reflect the loaded values
+    $('#timezone1, #timezone2, #timezone3').trigger('change.select2');
+}
+
 // Function to toggle the visibility of the third timezone row
-function toggleThirdTimezone() {
+function toggleThirdTimezone(updateDisplayFlag = true) {
     showThirdTimezone = document.getElementById('showThirdTimezone').checked;
     const thirdTimezoneRow = document.querySelector('.time-row-container.tz:nth-of-type(3)');
     
@@ -37,8 +63,13 @@ function toggleThirdTimezone() {
         thirdTimezoneRow.style.display = showThirdTimezone ? 'flex' : 'none';
     }
     
-    // Update the display to recalculate overlaps
-    updateDisplay();
+    // Save preference to localStorage
+    localStorage.setItem('showThirdTimezone', showThirdTimezone);
+    
+    // Update the display to recalculate overlaps (unless specified not to)
+    if (updateDisplayFlag) {
+        updateDisplay();
+    }
 }
 
 // Function to initialize select2 dropdowns
@@ -80,6 +111,12 @@ function initializeSelect2() {
     
     // Handle select2 change events
     $('#timezone1, #timezone2, #timezone3').on('change', function() {
+        // Save selection to localStorage
+        const id = this.id;
+        const value = this.value;
+        localStorage.setItem(id, value);
+        
+        // Update display
         updateDisplay();
     });
 }
@@ -395,9 +432,9 @@ function updateDisplay() {
     timezone3Display.innerHTML = '';
     
     // Create time blocks for each timezone
-    createTimeBlocks(timezone1Display, timezone1Value, formats[1]);
-    createTimeBlocks(timezone2Display, timezone2Value, formats[2]);
-    createTimeBlocks(timezone3Display, timezone3Value, formats[3]);
+    createTimeBlocks(timezone1Display, timezone1Value, timeFormat);
+    createTimeBlocks(timezone2Display, timezone2Value, timeFormat);
+    createTimeBlocks(timezone3Display, timezone3Value, timeFormat);
     
     // Add current time markers
     updateCurrentTimeMarkers();
