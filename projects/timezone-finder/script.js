@@ -163,9 +163,6 @@ function initializeTimeSlider() {
         const selectedMinutes = Math.floor((percentage / 100) * totalMinutesInDay);
         const selectedHours = Math.floor(selectedMinutes / 60);
         const selectedMins = selectedMinutes % 60;
-        
-        // You could display the selected time somewhere if needed
-        console.log(`Selected time: ${selectedHours}:${selectedMins.toString().padStart(2, '0')}`);
     }
     
     // Make slider draggable
@@ -602,6 +599,16 @@ function updateOverlapIndicator(timezone1, timezone2, timezone3) {
         indicator.className = `time-block ${overlapClass}`;
         indicator.style.left = `${leftPosition}%`;
         indicator.style.width = `${blockWidth}%`;
+        indicator.style.cursor = 'pointer';
+        indicator.setAttribute('data-hour', i);
+        
+        // Add title/tooltip
+        indicator.title = 'Click to create Outlook meeting';
+        
+        // Add click event to open Outlook meeting
+        indicator.addEventListener('click', function() {
+            createOutlookMeeting(i, timezone1, timezone2, timezone3);
+        });
         
         overlapIndicator.appendChild(indicator);
     }
@@ -621,4 +628,65 @@ function getCategoryForHourInTimezone(hour, timezone) {
     const targetHour = parseInt(timeString.split(':')[0]);
     
     return getTimeCategory(targetHour);
+}
+
+// Function to create an Outlook meeting for the selected hour
+function createOutlookMeeting(hour, timezone1, timezone2, timezone3) {
+    // Get current date
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const day = now.getDate();
+    
+    // Create start and end times (1 hour meeting)
+    const startDate = new Date(year, month, day);
+    startDate.setHours(hour, 0, 0, 0);
+    
+    const endDate = new Date(year, month, day);
+    endDate.setHours(hour + 1, 0, 0, 0);
+    
+    // Format dates for Outlook URL in UTC format YYYY-MM-DDTHH:mm:ss
+    const formatDateForOutlook = (date) => {
+        // Format as YYYY-MM-DDTHH:mm:ss in UTC
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    };
+    
+    const startTime = formatDateForOutlook(startDate);
+    const endTime = formatDateForOutlook(endDate);    
+    // Create meeting subject with timezone information
+    let subject = 'Meeting';
+    
+    // Get timezone names for the subject
+    const getTimezoneName = (tz) => {
+        const tzObj = timezoneObjects.find(obj => obj.value === tz);
+        if (tzObj) {
+            return tzObj.value.split('/').pop().replace(/_/g, ' ');
+        }
+        return tz;
+    };
+    
+    // Add timezone names to subject
+    subject += ` (${getTimezoneName(timezone1)}`;
+    subject += `, ${getTimezoneName(timezone2)}`;
+    if (showThirdTimezone && timezone3) {
+        subject += `, ${getTimezoneName(timezone3)}`;
+    }
+    subject += ')';
+    
+    // Create body with timezone information
+    let body = 'Please let me know if this schedule works for you.\n';
+    body += `We will discuss the following:\n`;
+    
+    // Create Outlook URL
+    const outlookUrl = `https://outlook.office.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}&startdt=${startTime}&enddt=${endTime}`;
+    
+    // Open in new tab
+    window.open(outlookUrl, '_blank');
 }
