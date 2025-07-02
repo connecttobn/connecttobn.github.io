@@ -1,8 +1,9 @@
  // Global variables
 let timeFormat = '12-hour'; // Single time format for all timezones
 
-// Variable to track third timezone visibility
+// Variables to track feature visibility
 let showThirdTimezone = true;
+let showOutlookFeature = true; // Variable to track Outlook calendar feature
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -14,6 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load saved preferences from localStorage
     loadSavedPreferences();
+    
+    // Set initial visibility of Outlook instructions based on feature toggle
+    const outlookInstructions = document.getElementById('outlookInstructions');
+    if (outlookInstructions) {
+        outlookInstructions.style.display = showOutlookFeature ? 'block' : 'none';
+    }
     
     // Update display and initialize slider
     updateDisplay();
@@ -29,6 +36,15 @@ function loadSavedPreferences() {
     const savedTimeFormat = localStorage.getItem('timeFormat');
     if (savedTimeFormat) {
         timeFormat = savedTimeFormat;
+    }
+    
+    // Load Outlook calendar feature preference
+    const savedShowOutlookFeature = localStorage.getItem('showOutlookFeature');
+    if (savedShowOutlookFeature !== null) {
+        showOutlookFeature = savedShowOutlookFeature === 'true';
+        document.getElementById('showOutlookFeature').checked = showOutlookFeature;
+    } else {
+        showOutlookFeature = document.getElementById('showOutlookFeature').checked;
     }
     
     // Load third timezone visibility preference
@@ -70,6 +86,24 @@ function toggleThirdTimezone(updateDisplayFlag = true) {
     if (updateDisplayFlag) {
         updateDisplay();
     }
+}
+
+// Function to toggle the Outlook calendar feature
+function toggleOutlookFeature() {
+    // Get the checkbox status
+    showOutlookFeature = document.getElementById('showOutlookFeature').checked;
+    
+    // Update the visibility of the Outlook instructions
+    const outlookInstructions = document.getElementById('outlookInstructions');
+    if (outlookInstructions) {
+        outlookInstructions.style.display = showOutlookFeature ? 'block' : 'none';
+    }
+    
+    // Save preference to localStorage
+    localStorage.setItem('showOutlookFeature', showOutlookFeature);
+    
+    // Update display to apply changes
+    updateDisplay();
 }
 
 // Function to initialize select2 dropdowns
@@ -392,14 +426,30 @@ function populateTimezones() {
 }
 
 // Format time according to selected format
-function formatTime(hour, minute, format) {
-    if (format === '24-hour') {
-        return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-    } else {
-        const period = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour % 12 || 12;
-        return `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
-    }
+function formatTime(hour, date) {
+    // For 12-hour format
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    let timeStr = `${displayHour}${period}`;
+    
+    // Add date
+    const dateInfo = getFormattedDate(date);
+    return `${timeStr} ${dateInfo}`;
+}
+
+// Get formatted date with just day number followed by a three-letter day name in smaller font
+function getFormattedDate(date) {
+    // Get three-letter day abbreviation (Sun, Mon, Tue, Wed, Thu, Fri, Sat)
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const dayOfWeek = dayNames[date.getDay()];
+    const month = monthNames[date.getMonth()];
+    
+    // Get just the day number (1-31)
+    const day = date.getDate().toString().padStart(2, '0');
+    
+    // Return as day number followed by day abbreviation in a span for styling
+    return `<br><span class="day-abbr">${month} ${day} <br>${dayOfWeek}</span>`;
 }
 
 // Get time zone category (working, flexible, off hours)
@@ -442,13 +492,12 @@ function updateDisplay() {
 
 // Create time blocks for a timezone
 function createTimeBlocks(container, timezone, format) {
-    const now = new Date();
     
     // Create 24 hour blocks
     for (let i = 0; i < 24; i++) {
         const blockWidth = (100 / 24); // Width percentage for each hour
         let tzHour = i; // Default to local hour if timezone conversion fails
-        
+        let tzTime;
         try {
             // Get the actual time in the target timezone for this hour
             const localTime = new Date();
@@ -457,7 +506,7 @@ function createTimeBlocks(container, timezone, format) {
             // Convert to target timezone
             const options = { timeZone: timezone, hour12: false };
             const timeString = localTime.toLocaleString('en-US', options);
-            const tzTime = new Date(timeString);
+            tzTime = new Date(timeString);
             tzHour = tzTime.getHours();
         } catch (error) {
             console.error(`Error with timezone ${timezone}:`, error);
@@ -474,7 +523,8 @@ function createTimeBlocks(container, timezone, format) {
         // Add time label
         const timeLabel = document.createElement('div');
         timeLabel.className = 'time-block-label';
-        timeLabel.textContent = formatTime(tzHour, 0, format);
+        // Include date in the time format
+        timeLabel.innerHTML = formatTime(tzHour,tzTime);
         timeBlock.appendChild(timeLabel);
         
         container.appendChild(timeBlock);
@@ -602,13 +652,19 @@ function updateOverlapIndicator(timezone1, timezone2, timezone3) {
         indicator.style.cursor = 'pointer';
         indicator.setAttribute('data-hour', i);
         
-        // Add title/tooltip
-        indicator.title = 'Click to create Outlook meeting';
-        
-        // Add click event to open Outlook meeting
-        indicator.addEventListener('click', function() {
-            createOutlookMeeting(i, timezone1, timezone2, timezone3);
-        });
+        // Add title/tooltip and click event only if Outlook feature is enabled
+        if (showOutlookFeature) {
+            indicator.title = 'Click to create Outlook meeting';
+            indicator.style.cursor = 'pointer';
+            
+            // Add click event to open Outlook meeting
+            indicator.addEventListener('click', function() {
+                createOutlookMeeting(i, timezone1, timezone2, timezone3);
+            });
+        } else {
+            indicator.title = '';
+            indicator.style.cursor = 'default';
+        }
         
         overlapIndicator.appendChild(indicator);
     }

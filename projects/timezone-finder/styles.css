@@ -215,3 +215,13 @@ input:checked + .toggle-slider:before {
     color: #666;
     vertical-align: middle;
 }
+
+/* Style for the day abbreviation */
+.day-abbr {
+    font-size: 0.7em;
+    color: #777;
+    margin-left: 2px;
+    text-transform: uppercase;
+    vertical-align: super;
+    font-weight: 400;
+}

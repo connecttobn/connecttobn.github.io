@@ -31,10 +31,16 @@
                     <div class="w3-row">
                         <div class="w3-col s12" style="text-align: right; display: flex; align-items: center; justify-content: flex-end;">
                             <label class="toggle-switch">
-                                <input type="checkbox" id="showThirdTimezone" checked onchange="toggleThirdTimezone()">
+                                <input type="checkbox" id="showThirdTimezone" onchange="toggleThirdTimezone()">
                                 <span class="toggle-slider"></span>
                             </label>
                             <span class="toggle-label">Show third timezone</span>
+                            <div style="margin-left: 20px;"></div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="showOutlookFeature" onchange="toggleOutlookFeature()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="toggle-label">Enable Outlook invite</span>
                         </div>
                     </div>
                     
@@ -92,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="w3-text-teal w3-small">Click on overlap cell to create Outlook meeting</p>
+                        <p id="outlookInstructions" class="w3-text-teal w3-small">Click on overlap cell to create Outlook meeting</p>
                     </div>
                     
                     <div class="w3-row w3-margin-top">
@@ -119,7 +125,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=1"></script>
 </body>
 
 </html>
