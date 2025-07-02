@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sunil B N - Poems</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A collection of poems written by Sunil B N. Explore creative expressions through poetry.">
+    <meta name="keywords" content="poems, poetry, Sunil B N, creative writing, literature">
+    <meta name="robots" content="index, follow">
+    <link rel="shortcut icon" type="image/jpg" href="/favicon.ico"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="w3-light-grey">
+    <!-- Navigation Bar -->
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+            <a href="/poems/" class="w3-bar-item w3-button">Poems</a>
+            <a href="/resume.pdf" class="w3-bar-item w3-button" download="Sunil B N Resumé">Resumé</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="w3-container w3-center w3-padding-32">
+        <h1><b>POETRY COLLECTION</b></h1>
+        <p>Welcome to my poetic adventures! I'm still figuring out if "roses are red, violets are blue" counts as original content. <span class="w3-tag w3-light-grey">Amateur Poet Alert</span></p>
+    </header>
+
+    <!-- Content Container -->
+    <div class="w3-content" style="max-width:800px">
+        <!-- Poem Container -->
+        <div id="poems-container" class="w3-row">
+            <!-- Poems will be loaded dynamically from JSON file -->
+        </div>
+
+        <!-- Add More Poems Button -->
+        <div class="w3-center w3-padding-32">
+            <div class="w3-bar">
+                <a href="#" class="w3-button w3-teal w3-padding-large w3-margin-bottom">LOAD MORE POEMS</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w3-container w3-teal w3-center w3-margin-top" style="height: 3.5rem!important;">
+        <p class="w3-margin-bottom w3-content" style="max-width: 1400px">
+            <span style="float:left">Built with <a href="https://www.w3schools.com/w3css/">w3css</a> & <a href="https://fontawesome.com/">fontawesome</a></span>
+            <span style="float:right">Thank you <i class="fa fa-heart w3-hover-opacity"></i> for visiting!</span>
+        </p>
+    </footer>
+    
+    <script>
+        // Function to load and display poems from JSON file
+        async function loadPoems() {
+            try {
+                // Fetch the poems data from the JSON file
+                const response = await fetch('poems.json');
+                const poems = await response.json();
+                
+                // Get the container where poems will be displayed
+                const poemsContainer = document.getElementById('poems-container');
+                
+                // Sort poems by date (newest first)
+                poems.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateB - dateA;
+                });
+                
+                // Generate HTML for each poem
+                poems.forEach(poem => {
+                    // Create poem entry
+                    const poemEntry = document.createElement('div');
+                    poemEntry.className = 'w3-col s12 w3-margin-bottom';
+                    
+                    // Create poem card
+                    const poemCard = document.createElement('div');
+                    poemCard.className = 'poem-card w3-white w3-round-large';
+                    
+                    // Create container for poem content
+                    const container = document.createElement('div');
+                    container.className = 'w3-container';
+                    
+                    // Add poem title
+                    const title = document.createElement('h3');
+                    title.textContent = poem.title;
+                    
+                    // Add poem date
+                    const meta = document.createElement('div');
+                    meta.className = 'poem-meta';
+                    meta.textContent = poem.date;
+                    
+                    // Add poem content
+                    const content = document.createElement('div');
+                    content.className = 'poem-content';
+                    
+                    // Add each paragraph of the poem
+                    poem.content.forEach(paragraph => {
+                        const p = document.createElement('p');
+                        p.innerHTML = paragraph;
+                        content.appendChild(p);
+                    });
+                    
+                    // Assemble the poem card
+                    container.appendChild(title);
+                    container.appendChild(meta);
+                    container.appendChild(content);
+                    poemCard.appendChild(container);
+                    poemEntry.appendChild(poemCard);
+                    
+                    // Add the poem to the container
+                    poemsContainer.appendChild(poemEntry);
+                });
+                
+            } catch (error) {
+                console.error('Error loading poems:', error);
+                document.getElementById('poems-container').innerHTML = 
+                    '<div class="w3-panel w3-pale-red w3-leftbar w3-border-red"><p>Sorry, there was an error loading the poems.</p></div>';
+            }
+        }
+        
+        // Load poems when the page is loaded
+        document.addEventListener('DOMContentLoaded', loadPoems);
+    </script>
+</body>
+
+</html>

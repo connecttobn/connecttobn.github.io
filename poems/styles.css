@@ -1,0 +1,72 @@
+/* Poems Page Styling */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+/* Poem Card Styling */
+.poem-card {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 20px;
+    margin: 20px 0;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.poem-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.poem-card h3 {
+    color: #009688;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.poem-meta {
+    color: #777;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.poem-content {
+    font-size: 1.1em;
+    line-height: 1.8;
+    color: #333;
+}
+
+.poem-content p {
+    margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .poem-card {
+        margin: 10px 0;
+    }
+    
+    .poem-content {
+        font-size: 1em;
+        line-height: 1.6;
+    }
+}
+
+/* Header styling */
+header {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+header h1 {
+    color: #009688;
+    letter-spacing: 1px;
+}
+
+/* Load more button hover effect */
+.w3-button.w3-teal:hover {
+    background-color: #00796b !important;
+}

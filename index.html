@@ -118,11 +118,11 @@
                             class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Summary
                     </h2>
                     <div class="w3-container">
-                        <p><b>Software Architect</b> with over 11 years of professional software engineering experience, I have a proven track record of developing and designing products across multiple business domains. I excel in leading dynamic scrum teams to create innovative and collaborative products, architecting scalable and high-performing product designs, and influencing product strategy and UX design to enhance user experience.</p>
+                        <p><b>Software Architect</b> with <span id="years-experience">over 11 years</span> of professional software engineering experience, I have a proven track record of developing and designing products across multiple business domains. I excel in leading dynamic scrum teams to create innovative and collaborative products, architecting scalable and high-performing product designs, and influencing product strategy and UX design to enhance user experience.</p>
 
 <p>My expertise extends to driving customer adoption and upgrade initiatives, as well as hiring and mentoring new talent to integrate seamlessly and reach their full potential. I am passionate about driving cross-team collaborations to achieve successful outcomes.</p>
 
-<p></p>Outside of work, I enjoy traveling to new places, trekking, writing poems, playing football, and cooking. I am always interested in discussing new technology, great ideas, math problems, and inventions.</p>
+<p></p>Outside of work, I enjoy traveling to new places, trekking, writing <a href="/poems/">poems</a>, playing football, and cooking. I am always interested in discussing new technology, great ideas, math problems, and inventions.</p>
                     </div>
                 </div>
 
@@ -229,5 +229,24 @@
         <p class="w3-margin-bottom w3-content" style="max-width: 1400px"><span style="float:left">Built with <a href="https://www.w3schools.com/w3css/">w3css</a> & <a href="https://fontawesome.com/">fontawesome</a></span>
         <span style="float:right">Thank you <i class="fa fa-heart w3-hover-opacity"></i> for visiting!</span> </p>
     </footer>
+    <script>
+        // Calculate years of experience based on start date
+        document.addEventListener('DOMContentLoaded', function() {
+            const startDate = new Date('2013-07-18');
+            const currentDate = new Date();
+            
+            // Calculate years difference
+            let yearsDiff = currentDate.getFullYear() - startDate.getFullYear();
+            
+            // Adjust for month and day if we haven't reached the anniversary yet this year
+            if (currentDate.getMonth() < startDate.getMonth() || 
+                (currentDate.getMonth() === startDate.getMonth() && currentDate.getDate() < startDate.getDate())) {
+                yearsDiff--;
+            }
+            
+            // Update the text
+            document.getElementById('years-experience').textContent = `over ${yearsDiff} years`;
+        });
+    </script>
 </body>
 </html>
