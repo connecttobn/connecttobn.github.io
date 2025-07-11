@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        #qrcode {
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            display: inline-block;
+        }
+        .hidden {
+            display: none;
+        }
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .option-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="w3-container container">
+        <h1 class="w3-center">QR Code Generator</h1>
+        <p class="w3-center">Generate QR codes for URLs, text, or contact information</p>
+        
+        <div class="w3-card-4 w3-round-large w3-padding-large">
+            <div class="w3-container" style="margin-top: 10px;">
+                <label for="text" class="w3-text-teal"><b>Enter content for QR code:</b></label>
+                <textarea required class="w3-input w3-border w3-round" id="text" placeholder="Enter URL, text, or information" rows="3" style="resize: vertical;"></textarea>
+                <p class="w3-text-grey" style="font-size: 12px; margin-top: 5px;">
+                    <i>You can resize this box by dragging the bottom corner</i>
+                </p>
+            </div>
+
+            <div class="w3-container w3-margin-top" style="margin-bottom: 10px;">
+                <div class="options-container">
+                    <div class="option-group">
+                        <div style="display: flex; align-items: center;">
+                            <label class="w3-text-teal"><b>Error Correction:</b></label>
+                            <div class="tooltip" style="margin-left: 5px;">
+                                <span class="w3-text-teal w3-small">ⓘ</span>
+                                <span class="tooltiptext">
+                                    Error correction allows QR codes to be readable even when partially damaged or obscured. Higher levels make the code more resistant to damage but increase its size.
+                                </span>
+                            </div>
+                        </div>
+                        <select class="w3-select w3-border w3-round" id="errorCorrection">
+                            <option value="L">Low (7%)</option>
+                            <option value="M" selected>Medium (15%)</option>
+                            <option value="Q">Quartile (25%)</option>
+                            <option value="H">High (30%)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label class="w3-text-teal"><b>Size:</b></label>
+                        <input type="range" class="w3-input" id="size" min="100" max="400" value="200">
+                        <div class="w3-center"><span id="sizeValue">200 x 200</span> px</div>
+                    </div>
+                </div>
+
+                <div class="w3-margin-top w3-center">
+                    <button class="w3-button w3-teal w3-round" id="generateBtn" disabled>Generate QR Code</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result" class="w3-margin-top w3-center hidden" style="margin-bottom: 10px;">
+            <div class="w3-card-4 w3-round-large w3-padding">
+                <h3 class="w3-text-teal">Your QR Code</h3>
+                <div id="qrcode"></div>
+                <div class="w3-margin-top" >
+                    <button class="w3-button w3-teal w3-round" id="downloadBtn">Download QR Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('text');
+            const errorCorrectionSelect = document.getElementById('errorCorrection');
+            const sizeInput = document.getElementById('size');
+            const sizeValue = document.getElementById('sizeValue');
+            const generateBtn = document.getElementById('generateBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const resultDiv = document.getElementById('result');
+            const qrcodeDiv = document.getElementById('qrcode');
+            
+            // Update size value display
+            sizeInput.addEventListener('input', function() {
+                sizeValue.textContent = this.value + ' x ' + this.value;
+            });
+            
+            // Enable/disable generate button based on input
+            textInput.addEventListener('input', function() {
+                generateBtn.disabled = !this.value.trim();
+            });
+            
+            // Check initial state
+            generateBtn.disabled = !textInput.value.trim();
+            
+            // Generate QR code
+            generateBtn.addEventListener('click', function() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    alert('Please enter some content for the QR code');
+                    return;
+                }
+                
+                // Get options
+                const size = parseInt(sizeInput.value);
+                const errorCorrectionLevel = errorCorrectionSelect.value;
+                
+                // Clear previous QR code
+                qrcodeDiv.innerHTML = '';
+                
+                // Create an image element for the QR code
+                const qrImage = document.createElement('img');
+                
+                // Generate QR code as data URL
+                QRCode.toDataURL(text, {
+                    width: size,
+                    height: size,
+                    errorCorrectionLevel: errorCorrectionLevel,
+                    margin: 1,
+                    color: {
+                        dark: '#000000',
+                        light: '#ffffff'
+                    }
+                }, function(error, url) {
+                    if (error) {
+                        console.error(error);
+                        alert('Error generating QR code');
+                    } else {
+                        // Set the data URL as the image source
+                        qrImage.src = url;
+                        qrImage.alt = 'QR Code';
+                        qrImage.style.maxWidth = '100%';
+                        
+                        // Append the image to the QR code container
+                        qrcodeDiv.appendChild(qrImage);
+                        resultDiv.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Download QR code
+            downloadBtn.addEventListener('click', function() {
+                const qrImage = qrcodeDiv.querySelector('img');
+                if (!qrImage) return;
+                
+                // Create a temporary link element
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = qrImage.src;
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    </script>
+</body>
+</html>
