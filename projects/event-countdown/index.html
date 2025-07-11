@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Countdown Timer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        
+        .setup-container {
+            transition: opacity 0.5s ease;
+        }
+        
+        .countdown-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: white;
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+            display: none;
+        }
+        
+        .countdown-container.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .countdown {
+            font-size: 8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .event-name {
+            font-size: 2rem;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-align: left;
+            max-width: 50%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .time-block {
+            display: inline-block;
+            margin: 0 10px;
+            text-align: center;
+        }
+        
+        .time-value {
+            font-size: 8rem;
+            line-height: 1;
+        }
+        
+        .time-label {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        
+        .control-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+        
+        .control-button {
+            margin-left: 10px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        
+        .control-button:hover {
+            opacity: 1;
+        }
+        
+        .fullscreen-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: -1;
+        }
+        
+        /* Color themes */
+        .theme-dark {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        .theme-light {
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .theme-blue {
+            background-color: #003366;
+            color: #fff;
+        }
+        
+        .theme-red {
+            background-color: #660000;
+            color: #fff;
+        }
+        
+        .theme-custom {
+            color: #fff;
+            /* Background color will be set dynamically */
+        }
+        
+        /* Animation for time changes */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <!-- Setup Container -->
+    <div class="container setup-container" id="setupContainer">
+        <h1 class="w3-center">Event Countdown Timer</h1>
+        <p class="w3-center">Create a fullscreen countdown timer for your important events</p>
+        
+        <div class="w3-card-4 w3-round-large w3-padding-large">
+            <div class="w3-container" style="margin-top: 10px;">
+                <label for="eventName" class="w3-text-teal"><b>Event Name:</b> <span class="w3-text-grey">(optional)</span></label>
+                <input class="w3-input w3-border w3-round" id="eventName" type="text" placeholder="Enter event name (optional)">
+            </div>
+
+            <div class="w3-container w3-margin-top">
+                <label class="w3-text-teal"><b>Countdown Type:</b></label>
+                <div class="w3-row-padding">
+                    <div class="w3-col s6">
+                        <input class="w3-radio" type="radio" name="countdownType" value="fixed" id="fixedOption" checked>
+                        <label for="fixedOption">Fixed Duration</label>
+                    </div>
+                    <div class="w3-col s6">
+                        <input class="w3-radio" type="radio" name="countdownType" value="datetime" id="datetimeOption">
+                        <label for="datetimeOption">Specific Date & Time</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-container w3-margin-top" id="fixedContainer">
+                <label class="w3-text-teal"><b>Duration:</b></label>
+                <div class="w3-row-padding">
+                    <div class="w3-col s3">
+                        <button class="w3-button w3-block w3-border w3-round quick-option w3-teal" data-minutes="5">5 min</button>
+                    </div>
+                    <div class="w3-col s3">
+                        <button class="w3-button w3-block w3-border w3-round quick-option" data-minutes="10">10 min</button>
+                    </div>
+                    <div class="w3-col s3">
+                        <button class="w3-button w3-block w3-border w3-round quick-option" data-minutes="15">15 min</button>
+                    </div>
+                    <div class="w3-col s3">
+                        <input class="w3-input w3-border w3-round" id="customMinutes" type="number" min="1" placeholder="Custom">
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-container w3-margin-top" id="datetimeContainer" style="display: none;">
+                <label for="eventDate" class="w3-text-teal"><b>Event Date and Time:</b></label>
+                <input class="w3-input w3-border w3-round" id="eventDate" type="datetime-local">
+            </div>
+
+            <div class="w3-container w3-margin-top">
+                <label class="w3-text-teal"><b>Theme:</b></label>
+                <div class="w3-row-padding">
+                    <div class="w3-col s2">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-dark" style="background-color: #000; color: #fff; cursor: pointer;">
+                            Dark
+                        </div>
+                    </div>
+                    <div class="w3-col s2">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-light" style="background-color: #fff; color: #000; cursor: pointer; border: 2px solid #009688;">
+                            Light
+                        </div>
+                    </div>
+                    <div class="w3-col s2">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-blue" style="background-color: #003366; color: #fff; cursor: pointer;">
+                            Blue
+                        </div>
+                    </div>
+                    <div class="w3-col s2">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-red" style="background-color: #660000; color: #fff; cursor: pointer;">
+                            Red
+                        </div>
+                    </div>
+                    <div class="w3-col s4">
+                        <div class="w3-row">
+                            <div class="w3-col s5" style="padding: 2px;">
+                                <input type="color" id="customColorPicker" class="w3-input" value="#009688" style="height: 38px; padding: 2px;">
+                            </div>
+                            <div class="w3-col s7" style="padding-left: 4px;">
+                                <div class="w3-card w3-padding w3-center w3-round" id="customColorPreview" style="background-color: #009688; color: #fff; cursor: pointer; height: 38px; line-height: 22px; font-size: 12px;">
+                                    Custom
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-container w3-margin-top w3-center" style="margin-bottom: 10px;">
+                <button class="w3-button w3-teal w3-round" id="startCountdownBtn">Start Countdown</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown Container -->
+    <div class="countdown-container theme-light" id="countdownContainer">
+        <div class="event-name" id="displayEventName" style="font-size: x-large;">Event Name</div>
+        <div class="countdown">
+            <div class="time-block" id="daysBlock">
+                <div class="time-value" id="days">00</div>
+                <div class="time-label">Days</div>
+            </div>
+            <div class="time-block" id="hoursBlock">
+                <div class="time-value" id="hours">00</div>
+                <div class="time-label">Hours</div>
+            </div>
+            <div class="time-block">
+                <div class="time-value" id="minutes">00</div>
+                <div class="time-label">Minutes</div>
+            </div>
+            <div class="time-block">
+                <div class="time-value" id="seconds">00</div>
+                <div class="time-label">Seconds</div>
+            </div>
+        </div>
+        
+        <div class="control-buttons">
+            <button class="w3-button w3-round w3-white control-button" id="fullscreenBtn" title="Toggle Fullscreen">
+                <i class="fa fa-expand"></i>
+            </button>
+            <button class="w3-button w3-round w3-white control-button" id="exitBtn" title="Exit Countdown">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const eventNameInput = document.getElementById('eventName');
+            const eventDateInput = document.getElementById('eventDate');
+            const startCountdownBtn = document.getElementById('startCountdownBtn');
+            const setupContainer = document.getElementById('setupContainer');
+            const countdownContainer = document.getElementById('countdownContainer');
+            const displayEventName = document.getElementById('displayEventName');
+            const daysElement = document.getElementById('days');
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const exitBtn = document.getElementById('exitBtn');
+            const themeOptions = document.querySelectorAll('.theme-option');
+            const datetimeOption = document.getElementById('datetimeOption');
+            const fixedOption = document.getElementById('fixedOption');
+            const datetimeContainer = document.getElementById('datetimeContainer');
+            const fixedContainer = document.getElementById('fixedContainer');
+            const quickOptions = document.querySelectorAll('.quick-option');
+            const customMinutesInput = document.getElementById('customMinutes');
+            const customColorPicker = document.getElementById('customColorPicker');
+            const customColorPreview = document.getElementById('customColorPreview');
+            
+            let selectedTheme = 'theme-light';
+            let customColor = '#009688';
+            let countdownInterval;
+            let targetDate;
+            let selectedMinutes = null;
+            
+            // Set minimum date to today
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            eventDateInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+            // Toggle between datetime and fixed duration
+            datetimeOption.addEventListener('change', function() {
+                if (this.checked) {
+                    datetimeContainer.style.display = 'block';
+                    fixedContainer.style.display = 'none';
+                    selectedMinutes = null;
+                    checkInputs();
+                }
+            });
+            
+            fixedOption.addEventListener('change', function() {
+                if (this.checked) {
+                    datetimeContainer.style.display = 'none';
+                    fixedContainer.style.display = 'block';
+                    checkInputs();
+                }
+            });
+            
+            // Handle quick options
+            quickOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectedMinutes = parseInt(this.dataset.minutes);
+                    quickOptions.forEach(opt => opt.classList.remove('w3-teal'));
+                    this.classList.add('w3-teal');
+                    checkInputs();
+                });
+            });
+            
+            // Handle custom minutes input
+            customMinutesInput.addEventListener('input', function() {
+                if (this.value && parseInt(this.value) > 0) {
+                    selectedMinutes = parseInt(this.value);
+                    quickOptions.forEach(opt => opt.classList.remove('w3-teal'));
+                }
+            });
+            
+            // Set default selected minutes
+            selectedMinutes = 5; // Default to 5 minutes
+            
+            // Theme selection
+            themeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    themeOptions.forEach(opt => opt.style.border = opt.dataset.theme === 'theme-light' ? '1px solid #ddd' : 'none');
+                    this.style.border = '2px solid #009688';
+                    selectedTheme = this.dataset.theme;
+                    customColorPreview.style.border = 'none';
+                });
+            });
+            
+            // Custom color picker
+            customColorPicker.addEventListener('input', function() {
+                customColor = this.value;
+                customColorPreview.style.backgroundColor = customColor;
+                
+                // Automatically adjust text color based on background brightness
+                const r = parseInt(customColor.substr(1, 2), 16);
+                const g = parseInt(customColor.substr(3, 2), 16);
+                const b = parseInt(customColor.substr(5, 2), 16);
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                customColorPreview.style.color = brightness > 128 ? '#000' : '#fff';
+            });
+            
+            // Select custom color
+            customColorPreview.addEventListener('click', function() {
+                themeOptions.forEach(opt => opt.style.border = opt.dataset.theme === 'theme-light' ? '1px solid #ddd' : 'none');
+                this.style.border = '2px solid #009688';
+                selectedTheme = 'theme-custom';
+            });
+            
+            // Start countdown
+            startCountdownBtn.addEventListener('click', function() {
+                // Set target date based on selected option
+                if (datetimeOption.checked) {
+                    if (!eventDateInput.value) {
+                        alert('Please select a date and time');
+                        return;
+                    }
+                    
+                    targetDate = new Date(eventDateInput.value).getTime();
+                    if (isNaN(targetDate) || targetDate <= Date.now()) {
+                        alert('Please enter a valid future date and time');
+                        return;
+                    }
+                } else {
+                    // Use selected minutes or default to 5
+                    const minutes = selectedMinutes || 5;
+                    targetDate = Date.now() + (minutes * 60 * 1000);
+                }
+                
+                // Handle optional event name
+                if (eventNameInput.value.trim()) {
+                    displayEventName.textContent = eventNameInput.value.trim();
+                    displayEventName.style.display = 'block';
+                } else {
+                    displayEventName.style.display = 'none';
+                }
+                
+                countdownContainer.className = `countdown-container ${selectedTheme}`;
+                
+                // Apply custom color if selected
+                if (selectedTheme === 'theme-custom') {
+                    countdownContainer.style.backgroundColor = customColor;
+                    
+                    // Adjust text color based on background brightness
+                    const r = parseInt(customColor.substr(1, 2), 16);
+                    const g = parseInt(customColor.substr(3, 2), 16);
+                    const b = parseInt(customColor.substr(5, 2), 16);
+                    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                    countdownContainer.style.color = brightness > 128 ? '#000' : '#fff';
+                } else {
+                    countdownContainer.style.backgroundColor = '';
+                    countdownContainer.style.color = '';
+                }
+                
+                setupContainer.style.display = 'none';
+                countdownContainer.classList.add('active');
+                
+                updateCountdown();
+                countdownInterval = setInterval(updateCountdown, 1000);
+            });
+            
+            // Update countdown timer
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    daysElement.textContent = '00';
+                    hoursElement.textContent = '00';
+                    minutesElement.textContent = '00';
+                    secondsElement.textContent = '00';
+                    displayEventName.textContent = 'Event has started!';
+                    return;
+                }
+                
+                // Calculate time units
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Show/hide days and hours based on their values
+                document.getElementById('daysBlock').style.display = days > 0 ? 'inline-block' : 'none';
+                document.getElementById('hoursBlock').style.display = hours > 0 || days > 0 ? 'inline-block' : 'none';
+                
+                // Add animation to changing values
+                if (daysElement.textContent !== String(days).padStart(2, '0')) {
+                    daysElement.classList.add('pulse');
+                    setTimeout(() => daysElement.classList.remove('pulse'), 500);
+                }
+                
+                if (hoursElement.textContent !== String(hours).padStart(2, '0')) {
+                    hoursElement.classList.add('pulse');
+                    setTimeout(() => hoursElement.classList.remove('pulse'), 500);
+                }
+                
+                if (minutesElement.textContent !== String(minutes).padStart(2, '0')) {
+                    minutesElement.classList.add('pulse');
+                    setTimeout(() => minutesElement.classList.remove('pulse'), 500);
+                }
+                
+                // Update display
+                daysElement.textContent = String(days).padStart(2, '0');
+                hoursElement.textContent = String(hours).padStart(2, '0');
+                minutesElement.textContent = String(minutes).padStart(2, '0');
+                secondsElement.textContent = String(seconds).padStart(2, '0');
+            }
+            
+            // Toggle fullscreen
+            fullscreenBtn.addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    if (countdownContainer.requestFullscreen) {
+                        countdownContainer.requestFullscreen();
+                    } else if (countdownContainer.webkitRequestFullscreen) { /* Safari */
+                        countdownContainer.webkitRequestFullscreen();
+                    } else if (countdownContainer.msRequestFullscreen) { /* IE11 */
+                        countdownContainer.msRequestFullscreen();
+                    }
+                    fullscreenBtn.innerHTML = '<i class="fa fa-compress"></i>';
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) { /* Safari */
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) { /* IE11 */
+                        document.msExitFullscreen();
+                    }
+                    fullscreenBtn.innerHTML = '<i class="fa fa-expand"></i>';
+                }
+            });
+            
+            // Exit countdown
+            exitBtn.addEventListener('click', function() {
+                countdownContainer.classList.remove('active');
+                setupContainer.style.display = 'block';
+                clearInterval(countdownInterval);
+                
+                // Exit fullscreen if active
+                if (document.fullscreenElement) {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    fullscreenBtn.innerHTML = '<i class="fa fa-expand"></i>';
+                }
+            });
+            
+            // Handle fullscreen change
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+            
+            function handleFullscreenChange() {
+                if (!document.fullscreenElement && 
+                    !document.webkitFullscreenElement && 
+                    !document.mozFullScreenElement && 
+                    !document.msFullscreenElement) {
+                    fullscreenBtn.innerHTML = '<i class="fa fa-expand"></i>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
