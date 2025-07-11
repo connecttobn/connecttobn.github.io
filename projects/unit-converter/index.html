@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unit Converter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .converter-card {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .converter-card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .input-group input {
+            flex: 1;
+        }
+        
+        .input-group select {
+            width: 150px;
+            margin-left: 10px;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 160px; /* Position to the left of the select box */
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            padding: 5px;
+            color: #009688;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .copy-btn:hover {
+            color: #00796b;
+        }
+        
+        .copy-tooltip {
+            position: absolute;
+            background-color: #555;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            right: 160px;
+            top: -25px;
+        }
+        
+        .copy-tooltip.show {
+            opacity: 1;
+        }
+        
+        .swap-btn {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .formula {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group select {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="w3-center">Unit Converter</h1>
+        <p class="w3-center">Convert between different units of length, weight, and area</p>
+
+        <!-- Tabs -->
+        <div class="w3-bar w3-teal">
+            <button class="w3-bar-item w3-button tab-btn active" onclick="openTab('length')">
+                <i class="fa fa-arrows-h"></i> Length
+            </button>
+            <button class="w3-bar-item w3-button tab-btn" onclick="openTab('weight')">
+                <i class="fa fa-balance-scale"></i> Weight
+            </button>
+            <button class="w3-bar-item w3-button tab-btn" onclick="openTab('area')">
+                <i class="fa fa-square-o"></i> Area
+            </button>
+        </div>
+
+        <!-- Length Converter -->
+        <div id="length" class="tab-content active">
+            <div class="w3-card-4 w3-round-large w3-padding converter-card">
+                <h3><i class="fa fa-arrows-h w3-text-teal"></i> Length Converter</h3>
+                
+                <div class="input-group">
+                    <input type="number" id="lengthInput" class="w3-input w3-border w3-round" placeholder="Enter value" oninput="convertLength()" style="width: 60%; min-width: 120px;">
+                    <select id="lengthFromUnit" class="w3-select w3-border w3-round" onchange="convertLength()">
+                        <option value="mm">Millimeters (mm)</option>
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="m" selected>Meters (m)</option>
+                        <option value="km">Kilometers (km)</option>
+                        <option value="in">Inches (in)</option>
+                        <option value="ft">Feet (ft)</option>
+                        <option value="yd">Yards (yd)</option>
+                        <option value="mi">Miles (mi)</option>
+                    </select>
+                </div>
+                
+                <div class="swap-btn">
+                    <button class="w3-button w3-round w3-teal" onclick="swapLengthUnits()">
+                        <i class="fa fa-exchange fa-rotate-90"></i> Swap
+                    </button>
+                </div>
+                
+                <div class="input-group">
+                    <input type="number" id="lengthResult" class="w3-input w3-border w3-round" placeholder="Result" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('lengthResult')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="lengthCopyTooltip">Copied!</span>
+                    </button>
+                    <select id="lengthToUnit" class="w3-select w3-border w3-round" onchange="convertLength()">
+                        <option value="mm">Millimeters (mm)</option>
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="m">Meters (m)</option>
+                        <option value="km">Kilometers (km)</option>
+                        <option value="in" selected>Inches (in)</option>
+                        <option value="ft">Feet (ft)</option>
+                        <option value="yd">Yards (yd)</option>
+                        <option value="mi">Miles (mi)</option>
+                    </select>
+                </div>
+                
+                <div class="formula" id="lengthFormula"></div>
+            </div>
+        </div>
+
+        <!-- Weight Converter -->
+        <div id="weight" class="tab-content">
+            <div class="w3-card-4 w3-round-large w3-padding converter-card">
+                <h3><i class="fa fa-balance-scale w3-text-teal"></i> Weight Converter</h3>
+                
+                <div class="input-group">
+                    <input type="number" id="weightInput" class="w3-input w3-border w3-round" placeholder="Enter value" oninput="convertWeight()">
+                    <select id="weightFromUnit" class="w3-select w3-border w3-round" onchange="convertWeight()">
+                        <option value="mg">Milligrams (mg)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="kg" selected>Kilograms (kg)</option>
+                        <option value="oz">Ounces (oz)</option>
+                        <option value="lb">Pounds (lb)</option>
+                        <option value="st">Stone (st)</option>
+                        <option value="ton">Metric Tons (t)</option>
+                        <option value="uston">US Tons</option>
+                    </select>
+                </div>
+                
+                <div class="swap-btn">
+                    <button class="w3-button w3-round w3-teal" onclick="swapWeightUnits()">
+                        <i class="fa fa-exchange fa-rotate-90"></i> Swap
+                    </button>
+                </div>
+                
+                <div class="input-group">
+                    <input type="number" id="weightResult" class="w3-input w3-border w3-round" placeholder="Result" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('weightResult')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="weightCopyTooltip">Copied!</span>
+                    </button>
+                    <select id="weightToUnit" class="w3-select w3-border w3-round" onchange="convertWeight()">
+                        <option value="mg">Milligrams (mg)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="oz">Ounces (oz)</option>
+                        <option value="lb" selected>Pounds (lb)</option>
+                        <option value="st">Stone (st)</option>
+                        <option value="ton">Metric Tons (t)</option>
+                        <option value="uston">US Tons</option>
+                    </select>
+                </div>
+                
+                <div class="formula" id="weightFormula"></div>
+            </div>
+        </div>
+
+        <!-- Area Converter -->
+        <div id="area" class="tab-content">
+            <div class="w3-card-4 w3-round-large w3-padding converter-card">
+                <h3><i class="fa fa-square-o w3-text-teal"></i> Area Converter</h3>
+                
+                <div class="input-group">
+                    <input type="number" id="areaInput" class="w3-input w3-border w3-round" placeholder="Enter value" oninput="convertArea()">
+                    <select id="areaFromUnit" class="w3-select w3-border w3-round" onchange="convertArea()">
+                        <option value="sqm" selected>Square Meters (m²)</option>
+                        <option value="sqkm">Square Kilometers (km²)</option>
+                        <option value="sqcm">Square Centimeters (cm²)</option>
+                        <option value="sqmm">Square Millimeters (mm²)</option>
+                        <option value="sqft">Square Feet (ft²)</option>
+                        <option value="sqyd">Square Yards (yd²)</option>
+                        <option value="sqmi">Square Miles (mi²)</option>
+                        <option value="acre">Acres</option>
+                        <option value="ha">Hectares (ha)</option>
+                    </select>
+                </div>
+                
+                <div class="swap-btn">
+                    <button class="w3-button w3-round w3-teal" onclick="swapAreaUnits()">
+                        <i class="fa fa-exchange fa-rotate-90"></i> Swap
+                    </button>
+                </div>
+                
+                <div class="input-group">
+                    <input type="number" id="areaResult" class="w3-input w3-border w3-round" placeholder="Result" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('areaResult')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="areaCopyTooltip">Copied!</span>
+                    </button>
+                    <select id="areaToUnit" class="w3-select w3-border w3-round" onchange="convertArea()">
+                        <option value="sqm">Square Meters (m²)</option>
+                        <option value="sqkm">Square Kilometers (km²)</option>
+                        <option value="sqcm">Square Centimeters (cm²)</option>
+                        <option value="sqmm">Square Millimeters (mm²)</option>
+                        <option value="sqft" selected>Square Feet (ft²)</option>
+                        <option value="sqyd">Square Yards (yd²)</option>
+                        <option value="sqmi">Square Miles (mi²)</option>
+                        <option value="acre">Acres</option>
+                        <option value="ha">Hectares (ha)</option>
+                    </select>
+                </div>
+                
+                <div class="formula" id="areaFormula"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Conversion factors to base units (meters, grams, square meters)
+        const lengthFactors = {
+            mm: 0.001,
+            cm: 0.01,
+            m: 1,
+            km: 1000,
+            in: 0.0254,
+            ft: 0.3048,
+            yd: 0.9144,
+            mi: 1609.34
+        };
+        
+        const weightFactors = {
+            mg: 0.001,
+            g: 1,
+            kg: 1000,
+            oz: 28.3495,
+            lb: 453.592,
+            st: 6350.29,
+            ton: 1000000,
+            uston: 907185
+        };
+        
+        const areaFactors = {
+            sqmm: 0.000001,
+            sqcm: 0.0001,
+            sqm: 1,
+            sqkm: 1000000,
+            sqft: 0.092903,
+            sqyd: 0.836127,
+            sqmi: 2589988.11,
+            acre: 4046.86,
+            ha: 10000
+        };
+        
+        // Unit names for formula display
+        const unitNames = {
+            mm: "millimeters",
+            cm: "centimeters",
+            m: "meters",
+            km: "kilometers",
+            in: "inches",
+            ft: "feet",
+            yd: "yards",
+            mi: "miles",
+            mg: "milligrams",
+            g: "grams",
+            kg: "kilograms",
+            oz: "ounces",
+            lb: "pounds",
+            st: "stone",
+            ton: "metric tons",
+            uston: "US tons",
+            sqmm: "square millimeters",
+            sqcm: "square centimeters",
+            sqm: "square meters",
+            sqkm: "square kilometers",
+            sqft: "square feet",
+            sqyd: "square yards",
+            sqmi: "square miles",
+            acre: "acres",
+            ha: "hectares"
+        };
+        
+        // Tab functionality
+        function openTab(tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabButtons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+        
+        // Length conversion
+        function convertLength() {
+            const input = parseFloat(document.getElementById("lengthInput").value);
+            if (isNaN(input)) {
+                document.getElementById("lengthResult").value = "";
+                document.getElementById("lengthFormula").textContent = "";
+                return;
+            }
+            
+            const fromUnit = document.getElementById("lengthFromUnit").value;
+            const toUnit = document.getElementById("lengthToUnit").value;
+            
+            // Convert to base unit (meters) then to target unit
+            const meters = input * lengthFactors[fromUnit];
+            const result = meters / lengthFactors[toUnit];
+            
+            document.getElementById("lengthResult").value = result.toFixed(6);
+            
+            // Display conversion formula
+            const formula = `Formula: ${input} ${unitNames[fromUnit]} × ${lengthFactors[fromUnit]} = ${meters.toFixed(6)} meters, then ${meters.toFixed(6)} meters ÷ ${lengthFactors[toUnit]} = ${result.toFixed(6)} ${unitNames[toUnit]}`;
+            document.getElementById("lengthFormula").textContent = formula;
+        }
+        
+        // Weight conversion
+        function convertWeight() {
+            const input = parseFloat(document.getElementById("weightInput").value);
+            if (isNaN(input)) {
+                document.getElementById("weightResult").value = "";
+                document.getElementById("weightFormula").textContent = "";
+                return;
+            }
+            
+            const fromUnit = document.getElementById("weightFromUnit").value;
+            const toUnit = document.getElementById("weightToUnit").value;
+            
+            // Convert to base unit (grams) then to target unit
+            const grams = input * weightFactors[fromUnit];
+            const result = grams / weightFactors[toUnit];
+            
+            document.getElementById("weightResult").value = result.toFixed(6);
+            
+            // Display conversion formula
+            const formula = `Formula: ${input} ${unitNames[fromUnit]} × ${weightFactors[fromUnit]} = ${grams.toFixed(6)} grams, then ${grams.toFixed(6)} grams ÷ ${weightFactors[toUnit]} = ${result.toFixed(6)} ${unitNames[toUnit]}`;
+            document.getElementById("weightFormula").textContent = formula;
+        }
+        
+        // Area conversion
+        function convertArea() {
+            const input = parseFloat(document.getElementById("areaInput").value);
+            if (isNaN(input)) {
+                document.getElementById("areaResult").value = "";
+                document.getElementById("areaFormula").textContent = "";
+                return;
+            }
+            
+            const fromUnit = document.getElementById("areaFromUnit").value;
+            const toUnit = document.getElementById("areaToUnit").value;
+            
+            // Convert to base unit (square meters) then to target unit
+            const sqMeters = input * areaFactors[fromUnit];
+            const result = sqMeters / areaFactors[toUnit];
+            
+            document.getElementById("areaResult").value = result.toFixed(6);
+            
+            // Display conversion formula
+            const formula = `Formula: ${input} ${unitNames[fromUnit]} × ${areaFactors[fromUnit]} = ${sqMeters.toFixed(6)} square meters, then ${sqMeters.toFixed(6)} square meters ÷ ${areaFactors[toUnit]} = ${result.toFixed(6)} ${unitNames[toUnit]}`;
+            document.getElementById("areaFormula").textContent = formula;
+        }
+        
+        // Swap units
+        function swapLengthUnits() {
+            const fromUnit = document.getElementById("lengthFromUnit");
+            const toUnit = document.getElementById("lengthToUnit");
+            const temp = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = temp;
+            convertLength();
+        }
+        
+        function swapWeightUnits() {
+            const fromUnit = document.getElementById("weightFromUnit");
+            const toUnit = document.getElementById("weightToUnit");
+            const temp = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = temp;
+            convertWeight();
+        }
+        
+        function swapAreaUnits() {
+            const fromUnit = document.getElementById("areaFromUnit");
+            const toUnit = document.getElementById("areaToUnit");
+            const temp = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = temp;
+            convertArea();
+        }
+        
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const tooltipId = elementId.replace('Result', 'CopyTooltip');
+            const tooltip = document.getElementById(tooltipId);
+            
+            // Get the value to copy
+            const valueToCopy = element.value;
+            
+            // Use a fallback approach for better compatibility
+            if (navigator.clipboard && window.isSecureContext) {
+                // Use the Clipboard API when available and in secure context
+                navigator.clipboard.writeText(valueToCopy)
+                    .then(() => showCopiedTooltip(tooltip))
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        fallbackCopyMethod(element, tooltip);
+                    });
+            } else {
+                // Fallback for browsers that don't support Clipboard API
+                fallbackCopyMethod(element, tooltip);
+            }
+        }
+        
+        function fallbackCopyMethod(element, tooltip) {
+            // Create a temporary textarea element
+            const textArea = document.createElement('textarea');
+            textArea.value = element.value;
+            
+            // Make the textarea out of viewport
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            
+            // Select and copy
+            textArea.focus();
+            textArea.select();
+            
+            let success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            
+            // Remove the temporary element
+            document.body.removeChild(textArea);
+            
+            if (success) {
+                showCopiedTooltip(tooltip);
+            } else {
+                alert('Failed to copy. Please try again.');
+            }
+        }
+        
+        function showCopiedTooltip(tooltip) {
+            // Show tooltip
+            tooltip.classList.add('show');
+            
+            // Hide tooltip after 2 seconds
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Initialize conversions
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set default values
+            document.getElementById("lengthInput").value = 1;
+            document.getElementById("weightInput").value = 1;
+            document.getElementById("areaInput").value = 1;
+            
+            // Perform initial conversions
+            convertLength();
+            convertWeight();
+            convertArea();
+        });
+    </script>
+</body>
+</html>
