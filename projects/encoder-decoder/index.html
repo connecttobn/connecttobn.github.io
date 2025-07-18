@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Encoder Decoder</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .converter-card {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .converter-card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .input-group textarea {
+            flex: 1;
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .input-group select {
+            width: 150px;
+            margin-left: 10px;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+            padding: 5px;
+            color: #009688;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .copy-btn:hover {
+            color: #00796b;
+        }
+        
+        .copy-tooltip {
+            position: absolute;
+            background-color: #555;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            right: 10px;
+            top: -25px;
+        }
+        
+        .copy-tooltip.show {
+            opacity: 1;
+        }
+        
+        .action-btn {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .reference-table {
+            font-size: 12px;
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .reference-table th, .reference-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .reference-table th {
+            background-color: #009688;
+            color: white;
+        }
+        
+        .reference-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group select {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="w3-center">Encoder Decoder</h1>
+        <p class="w3-center">Encode or decode text in various formats</p>
+
+        <!-- Tabs -->
+        <div class="w3-bar w3-teal">
+            <button class="w3-bar-item w3-button tab-btn active" onclick="openTab('url')">
+                <i class="fa fa-link"></i> URL
+            </button>
+            <button class="w3-bar-item w3-button tab-btn" onclick="openTab('base64')">
+                <i class="fa fa-code"></i> Base64
+            </button>
+            <button class="w3-bar-item w3-button tab-btn" onclick="openTab('html')">
+                <i class="fa fa-html5"></i> HTML
+            </button>
+        </div>
+
+        <!-- URL Encoder/Decoder -->
+        <div id="url" class="tab-content active">
+            <div class="w3-card-4 w3-round-large w3-padding converter-card">
+                <h3><i class="fa fa-link w3-text-teal"></i> URL Encoder/Decoder</h3>
+                
+                <div class="input-group">
+                    <textarea id="urlInput" class="w3-input w3-border w3-round" placeholder="Enter text to encode or decode"></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard('urlInput')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="urlInputCopyTooltip">Copied!</span>
+                    </button>
+                </div>
+                
+                <div class="action-btn">
+                    <button class="w3-button w3-round w3-teal" onclick="encodeURL()">
+                        <i class="fa fa-lock"></i> Encode
+                    </button>
+                    <button class="w3-button w3-round w3-teal" onclick="decodeURL()">
+                        <i class="fa fa-unlock"></i> Decode
+                    </button>
+                    <button class="w3-button w3-round w3-red" onclick="clearText('urlInput', 'urlOutput')">
+                        <i class="fa fa-trash"></i> Clear
+                    </button>
+                </div>
+                
+                <div class="input-group">
+                    <textarea id="urlOutput" class="w3-input w3-border w3-round" placeholder="Result" readonly></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard('urlOutput')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="urlOutputCopyTooltip">Copied!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Base64 Encoder/Decoder -->
+        <div id="base64" class="tab-content">
+            <div class="w3-card-4 w3-round-large w3-padding converter-card">
+                <h3><i class="fa fa-code w3-text-teal"></i> Base64 Encoder/Decoder</h3>
+                
+                <div class="input-group">
+                    <textarea id="base64Input" class="w3-input w3-border w3-round" placeholder="Enter text to encode or decode"></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard('base64Input')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="base64InputCopyTooltip">Copied!</span>
+                    </button>
+                </div>
+                
+                <div class="action-btn">
+                    <button class="w3-button w3-round w3-teal" onclick="encodeBase64()">
+                        <i class="fa fa-lock"></i> Encode
+                    </button>
+                    <button class="w3-button w3-round w3-teal" onclick="decodeBase64()">
+                        <i class="fa fa-unlock"></i> Decode
+                    </button>
+                    <button class="w3-button w3-round w3-red" onclick="clearText('base64Input', 'base64Output')">
+                        <i class="fa fa-trash"></i> Clear
+                    </button>
+                </div>
+                
+                <div class="input-group">
+                    <textarea id="base64Output" class="w3-input w3-border w3-round" placeholder="Result" readonly></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard('base64Output')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="base64OutputCopyTooltip">Copied!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HTML Encoder/Decoder -->
+        <div id="html" class="tab-content">
+            <div class="w3-card-4 w3-round-large w3-padding converter-card">
+                <h3><i class="fa fa-html5 w3-text-teal"></i> HTML Entity Encoder/Decoder</h3>
+                
+                <div class="input-group">
+                    <textarea id="htmlInput" class="w3-input w3-border w3-round" placeholder="Enter text to encode or decode"></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard('htmlInput')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="htmlInputCopyTooltip">Copied!</span>
+                    </button>
+                </div>
+                
+                <div class="action-btn">
+                    <button class="w3-button w3-round w3-teal" onclick="encodeHTML()">
+                        <i class="fa fa-lock"></i> Encode
+                    </button>
+                    <button class="w3-button w3-round w3-teal" onclick="decodeHTML()">
+                        <i class="fa fa-unlock"></i> Decode
+                    </button>
+                    <button class="w3-button w3-round w3-red" onclick="clearText('htmlInput', 'htmlOutput')">
+                        <i class="fa fa-trash"></i> Clear
+                    </button>
+                </div>
+                
+                <div class="input-group">
+                    <textarea id="htmlOutput" class="w3-input w3-border w3-round" placeholder="Result" readonly></textarea>
+                    <button class="copy-btn" onclick="copyToClipboard('htmlOutput')" title="Copy to clipboard">
+                        <i class="fa fa-clipboard"></i>
+                        <span class="copy-tooltip" id="htmlOutputCopyTooltip">Copied!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Special Characters Reference -->
+        <div class="w3-card-4 w3-round-large w3-padding converter-card">
+            <h3><i class="fa fa-info-circle w3-text-teal"></i> Special Characters Reference</h3>
+            <div style="overflow-x: auto;">
+                <table class="reference-table">
+                    <tr>
+                        <th>Character</th>
+                        <th>URL Encoded</th>
+                        <th>HTML Entity</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>Space</td>
+                        <td>%20</td>
+                        <td>&amp;nbsp;</td>
+                        <td>Space character</td>
+                    </tr>
+                    <tr>
+                        <td>&</td>
+                        <td>%26</td>
+                        <td>&amp;amp;</td>
+                        <td>Ampersand</td>
+                    </tr>
+                    <tr>
+                        <td><</td>
+                        <td>%3C</td>
+                        <td>&amp;lt;</td>
+                        <td>Less than</td>
+                    </tr>
+                    <tr>
+                        <td>></td>
+                        <td>%3E</td>
+                        <td>&amp;gt;</td>
+                        <td>Greater than</td>
+                    </tr>
+                    <tr>
+                        <td>"</td>
+                        <td>%22</td>
+                        <td>&amp;quot;</td>
+                        <td>Double quote</td>
+                    </tr>
+                    <tr>
+                        <td>'</td>
+                        <td>%27</td>
+                        <td>&amp;apos;</td>
+                        <td>Single quote/apostrophe</td>
+                    </tr>
+                    <tr>
+                        <td>+</td>
+                        <td>%2B</td>
+                        <td>&amp;plus;</td>
+                        <td>Plus sign</td>
+                    </tr>
+                    <tr>
+                        <td>#</td>
+                        <td>%23</td>
+                        <td>&amp;num;</td>
+                        <td>Hash/number sign</td>
+                    </tr>
+                    <tr>
+                        <td>%</td>
+                        <td>%25</td>
+                        <td>&amp;percnt;</td>
+                        <td>Percent sign</td>
+                    </tr>
+                    <tr>
+                        <td>@</td>
+                        <td>%40</td>
+                        <td>&amp;commat;</td>
+                        <td>At sign</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add("active");
+            
+            // Add active class to the clicked button
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add("active");
+            } else {
+                // For programmatic calls (like on page load), find the right button
+                const buttons = document.querySelectorAll('.tab-btn');
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].getAttribute('onclick').includes("openTab('" + tabName + "')")) {
+                        buttons[i].classList.add("active");
+                    }
+                }
+            }
+        }
+        
+        // URL Encoding/Decoding
+        function encodeURL() {
+            const input = document.getElementById("urlInput").value;
+            const output = encodeURIComponent(input);
+            document.getElementById("urlOutput").value = output;
+        }
+        
+        function decodeURL() {
+            const input = document.getElementById("urlInput").value;
+            try {
+                const output = decodeURIComponent(input);
+                document.getElementById("urlOutput").value = output;
+            } catch (e) {
+                document.getElementById("urlOutput").value = "Error: Invalid URL encoding";
+            }
+        }
+        
+        // Base64 Encoding/Decoding
+        function encodeBase64() {
+            const input = document.getElementById("base64Input").value;
+            try {
+                const output = btoa(unescape(encodeURIComponent(input)));
+                document.getElementById("base64Output").value = output;
+            } catch (e) {
+                document.getElementById("base64Output").value = "Error: Could not encode to Base64";
+            }
+        }
+        
+        function decodeBase64() {
+            const input = document.getElementById("base64Input").value;
+            try {
+                const output = decodeURIComponent(escape(atob(input)));
+                document.getElementById("base64Output").value = output;
+            } catch (e) {
+                document.getElementById("base64Output").value = "Error: Invalid Base64 encoding";
+            }
+        }
+        
+        // HTML Entity Encoding/Decoding
+        function encodeHTML() {
+            const input = document.getElementById("htmlInput").value;
+            const output = input
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+            document.getElementById("htmlOutput").value = output;
+        }
+        
+        function decodeHTML() {
+            const input = document.getElementById("htmlInput").value;
+            const textarea = document.createElement("textarea");
+            textarea.innerHTML = input;
+            const output = textarea.value;
+            document.getElementById("htmlOutput").value = output;
+        }
+        
+        // Clear text fields
+        function clearText(inputId, outputId) {
+            document.getElementById(inputId).value = "";
+            document.getElementById(outputId).value = "";
+        }
+        
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const tooltipId = elementId + "CopyTooltip";
+            const tooltip = document.getElementById(tooltipId);
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(element.value)
+                    .then(() => {
+                        showCopiedTooltip(tooltip);
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        fallbackCopyMethod(element, tooltip);
+                    });
+            } else {
+                fallbackCopyMethod(element, tooltip);
+            }
+        }
+        
+        function fallbackCopyMethod(element, tooltip) {
+            // Create a temporary textarea element
+            const textArea = document.createElement("textarea");
+            textArea.value = element.value;
+            
+            // Make the textarea out of viewport
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            
+            // Select and copy
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopiedTooltip(tooltip);
+                } else {
+                    console.error('Failed to copy text');
+                }
+            } catch (err) {
+                console.error('Error during copy operation', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        function showCopiedTooltip(tooltip) {
+            tooltip.classList.add("show");
+            setTimeout(function() {
+                tooltip.classList.remove("show");
+            }, 1500);
+        }
+        
+        // Initialize the page when DOM is fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set URL tab as active by default
+            openTab('url');
+        });
+    </script>
+</body>
+</html>
