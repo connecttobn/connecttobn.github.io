@@ -23,11 +23,19 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(event) {
         // Only trigger shortcuts if not typing in an input field
         if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-            // Check if the pressed key is a number (0-9) or letter (a-z)
-            const key = event.key.toLowerCase();
-            if (/^[0-9a-z]$/.test(key)) {
+            // Check if the pressed key is a capital letter (A-Z)
+            const key = event.key;
+            if (/^[a-zA-Z]$/.test(key)) {
+                // Log the key press for debugging
+                console.log('Shortcut key pressed:', key);
+                
+                // Convert key to uppercase for matching (since our shortcuts are uppercase)
+                const upperKey = key.toUpperCase();
+                
                 // Find the card with the matching shortcut key
-                const shortcutElements = document.querySelectorAll('.shortcut-key[data-key="' + key + '"]');
+                const shortcutElements = document.querySelectorAll('.shortcut-key[data-key="' + upperKey + '"]');
+                console.log('Found shortcut elements for key ' + upperKey + ':', shortcutElements.length);
+                
                 if (shortcutElements.length > 0) {
                     // Find the parent card and its link
                     const cardContainer = shortcutElements[0].closest('.w3-container');
@@ -36,6 +44,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (cardElement) {
                             const linkElement = cardElement.querySelector('a');
                             if (linkElement && linkElement.href) {
+                                // Prevent default behavior (important for the '0' key)
+                                event.preventDefault();
+                                
                                 // Navigate to the project
                                 window.location.href = linkElement.href;
                             }
@@ -63,35 +74,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Find the container where we'll add the shortcut
-            const container = card.querySelector('.w3-round-large');
-            if (!container) return;
+            // Find the container where we'll add the shortcut - look for the colored container
+            const container = card.querySelector('.w3-container.w3-round-large');
+            if (!container) {
+                console.log('Container not found for card:', card);
+                return;
+            }
             
             // Make sure container has position: relative
-            if (container.style.position !== 'relative') {
-                container.style.position = 'relative';
-            }
+            container.style.position = 'relative';
             
             // Determine the next available key
             let key;
-            if (index < 10) {
-                // Use numbers 0-9 in order
-                key = String((index + 1) % 10); // This gives 1,2,3,4,5,6,7,8,9,0
-            } else {
-                // Use alphabet keys after running out of numbers
-                key = String.fromCharCode(97 + (index - 10)); // 97 is ASCII for 'a'
-            }
+            // Use capital alphabets (A-Z) for all shortcuts
+            key = String.fromCharCode(65 + index % 26); // 65 is ASCII for 'A'
             
             // Skip if this key is already used
             if (shortcutKeys.includes(key)) {
                 // Find the next available key
-                for (let i = 0; i < 36; i++) {
-                    let testKey;
-                    if (i < 10) {
-                        testKey = String(i);
-                    } else {
-                        testKey = String.fromCharCode(97 + (i - 10));
-                    }
+                for (let i = 0; i < 26; i++) {
+                    let testKey = String.fromCharCode(65 + i); // Capital A-Z
                     
                     if (!shortcutKeys.includes(testKey)) {
                         key = testKey;
@@ -121,8 +123,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Run the assignment function when the page loads
-    assignShortcutKeys();
+    // Run the assignment function when the page loads with a small delay to ensure DOM is ready
+    setTimeout(function() {
+        assignShortcutKeys();
+        console.log('Shortcut keys assigned');
+    }, 100);
 });
 
 /**
