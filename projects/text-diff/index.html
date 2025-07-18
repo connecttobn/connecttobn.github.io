@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Difference Utility</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .diff-card {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .diff-card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .input-group textarea {
+            flex: 1;
+            min-height: 250px;
+            resize: vertical;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+            padding: 5px;
+            color: #009688;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .copy-btn:hover {
+            color: #00796b;
+        }
+        
+        .copy-tooltip {
+            position: absolute;
+            background-color: #555;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            right: 10px;
+            top: -25px;
+        }
+        
+        .copy-tooltip.show {
+            opacity: 1;
+        }
+        
+        .action-btn {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .diff-output {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            overflow-x: auto;
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .diff-line {
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin: 0;
+            padding: 2px 5px;
+        }
+        
+        .diff-added {
+            background-color: #e6ffed;
+            color: #22863a;
+            font-weight: bold;
+        }
+        
+        .diff-removed {
+            background-color: #ffeef0;
+            color: #cb2431;
+            font-weight: bold;
+        }
+        
+        .diff-unchanged {
+            color: #24292e;
+        }
+        
+        .diff-info {
+            color: #586069;
+            font-style: italic;
+        }
+        
+        .diff-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .diff-options label {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .diff-options input {
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .input-columns {
+                flex-direction: column;
+            }
+            
+            .input-column {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .input-group textarea {
+                min-height: 200px;
+            }
+            
+            .diff-output {
+                max-height: 300px;
+            }
+        }
+        
+        .input-columns {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .input-column {
+            flex: 1;
+        }
+        
+        .column-header {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #009688;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="w3-center">Text Difference Utility</h1>
+        <div class="w3-card-4 w3-round-large w3-padding diff-card">
+            <h3><i class="fa fa-exchange w3-text-teal"></i> Text Comparison</h3>
+            
+            <div class="diff-options">
+                <label>
+                    <input type="checkbox" id="ignoreCase" checked> Ignore case
+                </label>
+                <label>
+                    <input type="checkbox" id="ignoreWhitespace"> Ignore whitespace
+                </label>
+                <label>
+                    <input type="checkbox" id="wordByWord"> Compare word by word
+                </label>
+            </div>
+            
+            <div class="input-columns">
+                <div class="input-column">
+                    <div class="column-header"><i class="fa fa-file-text-o w3-text-teal"></i> Original Text</div>
+                    <div class="input-group">
+                        <textarea id="originalText" class="w3-input w3-border w3-round" placeholder="Enter original text"></textarea>
+                        <button class="copy-btn" onclick="copyToClipboard('originalText')" title="Copy to clipboard">
+                            <i class="fa fa-clipboard"></i>
+                            <span class="copy-tooltip" id="originalTextCopyTooltip">Copied!</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-column">
+                    <div class="column-header"><i class="fa fa-file-text-o w3-text-teal"></i> Modified Text</div>
+                    <div class="input-group">
+                        <textarea id="modifiedText" class="w3-input w3-border w3-round" placeholder="Enter modified text"></textarea>
+                        <button class="copy-btn" onclick="copyToClipboard('modifiedText')" title="Copy to clipboard">
+                            <i class="fa fa-clipboard"></i>
+                            <span class="copy-tooltip" id="modifiedTextCopyTooltip">Copied!</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-btn">
+                <button class="w3-button w3-round w3-teal" onclick="findDifferences()">
+                    <i class="fa fa-search"></i> Find Differences
+                </button>
+                <button class="w3-button w3-round w3-red" onclick="clearTexts()">
+                    <i class="fa fa-trash"></i> Clear
+                </button>
+                <button class="w3-button w3-round w3-blue" onclick="swapTexts()">
+                    <i class="fa fa-exchange"></i> Swap
+                </button>
+            </div>
+            
+            <div class="diff-output" id="diffOutput">
+                <p class="diff-info">Differences will appear here after comparison</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Text difference function
+        function findDifferences() {
+            const originalText = document.getElementById('originalText').value;
+            const modifiedText = document.getElementById('modifiedText').value;
+            const ignoreCase = document.getElementById('ignoreCase').checked;
+            const ignoreWhitespace = document.getElementById('ignoreWhitespace').checked;
+            const wordByWord = document.getElementById('wordByWord').checked;
+            
+            if (!originalText && !modifiedText) {
+                document.getElementById('diffOutput').innerHTML = '<p class="diff-info">Please enter text in both fields</p>';
+                return;
+            }
+            
+            let original = originalText;
+            let modified = modifiedText;
+            
+            // Apply options
+            if (ignoreCase) {
+                original = original.toLowerCase();
+                modified = modified.toLowerCase();
+            }
+            
+            if (ignoreWhitespace) {
+                original = original.replace(/\s+/g, ' ').trim();
+                modified = modified.replace(/\s+/g, ' ').trim();
+            }
+            
+            let diffOutput = '';
+            
+            if (wordByWord) {
+                // Word by word comparison
+                const originalWords = original.split(/\s+/);
+                const modifiedWords = modified.split(/\s+/);
+                
+                diffOutput = compareWordArrays(originalWords, modifiedWords);
+            } else {
+                // Line by line comparison
+                const originalLines = original.split('\n');
+                const modifiedLines = modified.split('\n');
+                
+                diffOutput = compareLineArrays(originalLines, modifiedLines);
+            }
+            
+            document.getElementById('diffOutput').innerHTML = diffOutput || '<p class="diff-info">No differences found</p>';
+        }
+        
+        function compareLineArrays(originalLines, modifiedLines) {
+            let output = '';
+            const maxLines = Math.max(originalLines.length, modifiedLines.length);
+            
+            for (let i = 0; i < maxLines; i++) {
+                const originalLine = i < originalLines.length ? originalLines[i] : '';
+                const modifiedLine = i < modifiedLines.length ? modifiedLines[i] : '';
+                
+                if (originalLine === modifiedLine) {
+                    output += `<p class="diff-line diff-unchanged">${escapeHtml(originalLine)}</p>`;
+                } else {
+                    if (originalLine) {
+                        output += `<p class="diff-line diff-removed">- ${escapeHtml(originalLine)}</p>`;
+                    }
+                    if (modifiedLine) {
+                        output += `<p class="diff-line diff-added">+ ${escapeHtml(modifiedLine)}</p>`;
+                    }
+                }
+            }
+            
+            return output;
+        }
+        
+        function compareWordArrays(originalWords, modifiedWords) {
+            let output = '';
+            const maxWords = Math.max(originalWords.length, modifiedWords.length);
+            
+            // Create two lines showing word differences
+            let originalLine = '';
+            let modifiedLine = '';
+            
+            for (let i = 0; i < maxWords; i++) {
+                const originalWord = i < originalWords.length ? originalWords[i] : '';
+                const modifiedWord = i < modifiedWords.length ? modifiedWords[i] : '';
+                
+                if (originalWord === modifiedWord) {
+                    originalLine += originalWord + ' ';
+                    modifiedLine += modifiedWord + ' ';
+                } else {
+                    if (originalWord) {
+                        originalLine += '<span class="diff-removed">' + escapeHtml(originalWord) + '</span> ';
+                    }
+                    if (modifiedWord) {
+                        modifiedLine += '<span class="diff-added">' + escapeHtml(modifiedWord) + '</span> ';
+                    }
+                }
+            }
+            
+            output += `<p class="diff-line">Original: ${originalLine}</p>`;
+            output += `<p class="diff-line">Modified: ${modifiedLine}</p>`;
+            
+            return output;
+        }
+        
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // Clear text fields
+        function clearTexts() {
+            document.getElementById('originalText').value = '';
+            document.getElementById('modifiedText').value = '';
+            document.getElementById('diffOutput').innerHTML = '<p class="diff-info">Differences will appear here after comparison</p>';
+        }
+        
+        // Swap text between original and modified
+        function swapTexts() {
+            const originalText = document.getElementById('originalText').value;
+            const modifiedText = document.getElementById('modifiedText').value;
+            
+            document.getElementById('originalText').value = modifiedText;
+            document.getElementById('modifiedText').value = originalText;
+        }
+        
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const tooltipId = elementId + "CopyTooltip";
+            const tooltip = document.getElementById(tooltipId);
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(element.value)
+                    .then(() => {
+                        showCopiedTooltip(tooltip);
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        fallbackCopyMethod(element, tooltip);
+                    });
+            } else {
+                fallbackCopyMethod(element, tooltip);
+            }
+        }
+        
+        function fallbackCopyMethod(element, tooltip) {
+            // Create a temporary textarea element
+            const textArea = document.createElement("textarea");
+            textArea.value = element.value;
+            
+            // Make the textarea out of viewport
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            
+            // Select and copy
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopiedTooltip(tooltip);
+                } else {
+                    console.error('Failed to copy text');
+                }
+            } catch (err) {
+                console.error('Error during copy operation', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        function showCopiedTooltip(tooltip) {
+            tooltip.classList.add("show");
+            setTimeout(function() {
+                tooltip.classList.remove("show");
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
