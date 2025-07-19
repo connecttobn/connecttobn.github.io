@@ -7,32 +7,60 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
+        body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
         .maze-container {
-            margin: 20px auto;
+            margin: 10px auto;
             position: relative;
+            width: 100%;
             max-width: 600px;
+            padding: 0 10px;
         }
         #mazeCanvas {
             border: 2px solid #009688;
             border-radius: 8px;
             cursor: crosshair;
             touch-action: none;
+            width: 100%;
+            height: auto;
+            max-width: 600px;
         }
         .button-container {
-            margin: 10px 0;
+            margin: 10px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
         }
         .maze-button {
-            min-width: 120px;
+            min-width: 100px;
+            margin: 5px;
+            flex: 1;
+            padding: 12px !important;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+                margin: 10px 0;
+            }
+            .maze-button {
+                min-width: 140px;
+                font-size: 14px !important;
+            }
+            .w3-container {
+                padding: 8px;
+            }
+            .button-container {
+                gap: 6px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="w3-container w3-teal">
-        <div class="w3-bar w3-xlarge">
+        <div class="w3-bar w3-xlarge"style="width: 100%;">
             <a href="/" class="w3-bar-item w3-button">Home</a>
             <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
         </div>
@@ -41,7 +69,7 @@
     <div class="w3-container">
         <div class="w3-row w3-center">
             <h1>Maze Tracer</h1>
-            <p class="w3-text-grey">Draw a path through the maze!</p>
+            <p class="w3-text-grey">Draw a path through the maze! Avoid the pink lines.</p>
 
             <div class="button-container">
                 <button class="w3-button w3-teal w3-round-large maze-button" onclick="newMaze()">
@@ -50,10 +78,13 @@
                 <button class="w3-button w3-blue w3-round-large maze-button" onclick="clearPath()">
                     <i class="fa fa-eraser"></i> Clear Path
                 </button>
+                <button id="toggleObstacles" class="w3-button w3-pink w3-round-large maze-button" onclick="toggleObstacles()">
+                    <i class="fa fa-eye"></i> Show Obstacles
+                </button>
             </div>
 
             <div class="maze-container">
-                <canvas id="mazeCanvas" width="600" height="600"></canvas>
+                <canvas id="mazeCanvas" width="600" height="600" style="max-height: 80vh;"></canvas>
             </div>
 
             <div class="w3-text-grey w3-small w3-margin-top">

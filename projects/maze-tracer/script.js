@@ -9,10 +9,20 @@ let lastY = 0;
 const gridSize = 4; // 4x4 grid for simple mazes
 const cellSize = canvas.width / gridSize;
 let maze = [];
+let obstacles = [];
 let pathColor = '#FF9800';
+let obstacleColor = '#E91E63';
+let showObstacles = false;
+
+// Get UI elements
+const toggleButton = document.getElementById('toggleObstacles');
 
 // Initialize
 function init() {
+    // Make canvas responsive
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
     // Set up touch and mouse events
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
@@ -24,6 +34,20 @@ function init() {
     canvas.addEventListener('touchend', stopDrawing);
     
     newMaze();
+}
+
+function resizeCanvas() {
+    const container = canvas.parentElement;
+    const containerWidth = container.clientWidth;
+    const size = Math.min(containerWidth, 600);
+    
+    // Update canvas size
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    
+    // Keep the drawing context scale correct
+    const scale = size / canvas.width;
+    ctx.scale(scale, scale);
 }
 
 // Event handlers
@@ -90,22 +114,52 @@ function clearCanvas() {
 function generateMaze() {
     maze = [];
     
-    // Create a simple path with some curves
-    const pathTypes = [
-        // Straight path from top to bottom
-        [[0,1], [1,1], [2,1], [3,1]],
-        // S-shaped path
-        [[0,2], [1,2], [1,1], [2,1], [2,0], [3,0]],
-        // Zigzag path
-        [[0,0], [1,1], [2,0], [3,1]],
-        // L-shaped path
-        [[0,1], [1,1], [2,1], [2,2], [2,3]]
+    // Generate a simple path with some curves and obstacles
+    const mazeTypes = [
+        {
+            path: [[0,1], [1,1], [2,1], [3,1]], // Straight path
+            obstacles: [
+                { start: [1,2], end: [2,2] }, // Horizontal line right of path
+                { start: [1,0], end: [2,0] }  // Horizontal line left of path
+            ]
+        },
+        {
+            path: [[0,2], [1,2], [1,1], [2,1], [2,0], [3,0]], // S-shaped path
+            obstacles: [
+                { start: [0,3], end: [1,3] }, // Right edge line
+                { start: [2,2], end: [3,2] }  // Middle blocking line
+            ]
+        },
+        {
+            path: [[0,0], [1,1], [2,0], [3,1]], // Zigzag path
+            obstacles: [
+                { start: [1,2], end: [2,2] }, // Right side block
+                { start: [0,3], end: [3,3] }  // Far right vertical line
+            ]
+        },
+        {
+            path: [[0,1], [1,1], [2,1], [2,2], [2,3]], // L-shaped path
+            obstacles: [
+                { start: [0,0], end: [2,0] }, // Top horizontal line
+                { start: [3,1], end: [3,3] }  // Bottom right block
+            ]
+        }
     ];
     
-    maze = pathTypes[Math.floor(Math.random() * pathTypes.length)];
+    const selectedMaze = mazeTypes[Math.floor(Math.random() * mazeTypes.length)];
+    maze = selectedMaze.path;
+    obstacles = selectedMaze.obstacles;
 }
 
 // Draw the maze
+function toggleObstacles() {
+    showObstacles = !showObstacles;
+    toggleButton.innerHTML = showObstacles ? 
+        '<i class="fa fa-eye-slash"></i> Hide Obstacles' :
+        '<i class="fa fa-eye"></i> Show Obstacles';
+    drawMaze();
+}
+
 function drawMaze() {
     clearCanvas();
     
@@ -127,6 +181,55 @@ function drawMaze() {
         ctx.moveTo(0, pos);
         ctx.lineTo(canvas.width, pos);
         ctx.stroke();
+    }
+    
+    // Draw obstacles with crossed lines
+    if (showObstacles) {
+        ctx.strokeStyle = obstacleColor;
+        ctx.lineWidth = 12;
+        ctx.lineCap = 'round';
+        
+        obstacles.forEach(obstacle => {
+        const startX = (obstacle.start[1] + 0.5) * cellSize;
+        const startY = (obstacle.start[0] + 0.5) * cellSize;
+        const endX = (obstacle.end[1] + 0.5) * cellSize;
+        const endY = (obstacle.end[0] + 0.5) * cellSize;
+        
+        // Main line
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+        
+        // Add cross lines
+        const crossSize = 20;
+        const dx = endX - startX;
+        const dy = endY - startY;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        const numCrosses = Math.floor(length / (crossSize * 2));
+        const angle = Math.atan2(dy, dx);
+        
+        for (let i = 1; i <= numCrosses; i++) {
+            const t = i / (numCrosses + 1);
+            const crossX = startX + dx * t;
+            const crossY = startY + dy * t;
+            
+            // Draw X shape
+            ctx.beginPath();
+            ctx.moveTo(crossX - crossSize/2 * Math.cos(angle - Math.PI/4),
+                      crossY - crossSize/2 * Math.sin(angle - Math.PI/4));
+            ctx.lineTo(crossX + crossSize/2 * Math.cos(angle - Math.PI/4),
+                      crossY + crossSize/2 * Math.sin(angle - Math.PI/4));
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(crossX - crossSize/2 * Math.cos(angle + Math.PI/4),
+                      crossY - crossSize/2 * Math.sin(angle + Math.PI/4));
+            ctx.lineTo(crossX + crossSize/2 * Math.cos(angle + Math.PI/4),
+                      crossY + crossSize/2 * Math.sin(angle + Math.PI/4));
+            ctx.stroke();
+        }
+    });
     }
     
     // Draw path hints
