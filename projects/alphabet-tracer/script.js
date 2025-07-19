@@ -6,7 +6,8 @@ let currentIndex = 0;
 const characters = {
     uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
     lowercase: 'abcdefghijklmnopqrstuvwxyz'.split(''),
-    numbers: '0123456789'.split('')
+    numbers: '0123456789'.split(''),
+    kannada: 'ಅ ಆ ಇ ಈ ಉ ಊ ಋ ಎ ಏ ಐ ಒ ಓ ಔ ಅಂ ಅಃ ಕ ಖ ಗ ಘ ಙ ಚ ಛ ಜ ಝ ಞ ಟ ಠ ಡ ಢ ಣ ತ ಥ ದ ಧ ನ ಪ ಫ ಬ ಭ ಮ ಯ ರ ಲ ವ ಶ ಷ ಸ ಹ ಳ'.split(' ')
 };
 
 let isDrawing = false;
@@ -25,7 +26,8 @@ function drawLetter() {
     const letter = characters[currentMode][currentIndex];
     
     // Draw dotted letter
-    ctx.font = '300px Arial';
+    const fontSize = currentMode === 'kannada' ? 200 : 300;
+    ctx.font = `${fontSize}px ${currentMode === 'kannada' ? 'Noto Sans Kannada' : 'Arial'}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.strokeStyle = '#ccc';
