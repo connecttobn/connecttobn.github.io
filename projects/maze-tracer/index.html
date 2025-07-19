@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maze Tracer - Fun Path Drawing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .maze-container {
+            margin: 20px auto;
+            position: relative;
+            max-width: 600px;
+        }
+        #mazeCanvas {
+            border: 2px solid #009688;
+            border-radius: 8px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        .button-container {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .maze-button {
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-row w3-center">
+            <h1>Maze Tracer</h1>
+            <p class="w3-text-grey">Draw a path through the maze!</p>
+
+            <div class="button-container">
+                <button class="w3-button w3-teal w3-round-large maze-button" onclick="newMaze()">
+                    <i class="fa fa-refresh"></i> New Maze
+                </button>
+                <button class="w3-button w3-blue w3-round-large maze-button" onclick="clearPath()">
+                    <i class="fa fa-eraser"></i> Clear Path
+                </button>
+            </div>
+
+            <div class="maze-container">
+                <canvas id="mazeCanvas" width="600" height="600"></canvas>
+            </div>
+
+            <div class="w3-text-grey w3-small w3-margin-top">
+                Draw with your finger or mouse to trace the path
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
