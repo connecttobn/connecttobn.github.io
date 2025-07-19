@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Colorful Shapes - Learn Shapes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-row w3-center">
+            <h1>Shapes</h1>
+            <div class="w3-margin-top">
+                <canvas id="shapesCanvas" width="400" height="400"></canvas>
+            </div>
+            <div class="w3-bar w3-margin-top">
+                <button class="w3-button w3-teal w3-round-large" onclick="prevShape()">Previous</button>
+                <button class="w3-button w3-blue w3-round-large" onclick="nextShape()">Next</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
