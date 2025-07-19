@@ -182,17 +182,18 @@
             <div class="w3-container w3-margin-top" id="fixedContainer">
                 <label class="w3-text-teal"><b>Duration:</b></label>
                 <div class="w3-row-padding">
-                    <div class="w3-col s3">
-                        <button class="w3-button w3-block w3-border w3-round quick-option w3-teal" data-minutes="5">5 min</button>
+                    <!-- Two buttons per row on all screens -->
+                    <div class="w3-col w3-margin-bottom w3-half l3 m6 s6">
+                        <button class="w3-button w3-block w3-border w3-round quick-option w3-teal w3-large" style="padding: 12px" data-minutes="5">5 Min</button>
                     </div>
-                    <div class="w3-col s3">
-                        <button class="w3-button w3-block w3-border w3-round quick-option" data-minutes="10">10 min</button>
+                    <div class="w3-col w3-margin-bottom w3-half l3 m6 s6">
+                        <button class="w3-button w3-block w3-border w3-round quick-option w3-large" style="padding: 12px" data-minutes="10">10 Min</button>
                     </div>
-                    <div class="w3-col s3">
-                        <button class="w3-button w3-block w3-border w3-round quick-option" data-minutes="15">15 min</button>
+                    <div class="w3-col w3-margin-bottom w3-half l3 m6 s6">
+                        <button class="w3-button w3-block w3-border w3-round quick-option w3-large" style="padding: 12px" data-minutes="15">15 Min</button>
                     </div>
-                    <div class="w3-col s3">
-                        <input class="w3-input w3-border w3-round" id="customMinutes" type="number" min="1" placeholder="Custom">
+                    <div class="w3-col w3-margin-bottom w3-half l3 m6 s6">
+                        <input class="w3-input w3-border w3-round w3-large" style="padding: 12px; height: auto" id="customMinutes" type="number" min="1" placeholder="Custom Min">
                     </div>
                 </div>
             </div>
@@ -205,34 +206,34 @@
             <div class="w3-container w3-margin-top">
                 <label class="w3-text-teal"><b>Theme:</b></label>
                 <div class="w3-row-padding">
-                    <div class="w3-col s2">
-                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-dark" style="background-color: #000; color: #fff; cursor: pointer;">
+                    <div class="w3-col w3-margin-bottom s6 m4 l3">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option w3-large" data-theme="theme-dark" style="background-color: #000; color: #fff; cursor: pointer; padding: 12px;">
                             Dark
                         </div>
                     </div>
-                    <div class="w3-col s2">
-                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-light" style="background-color: #fff; color: #000; cursor: pointer; border: 2px solid #009688;">
+                    <div class="w3-col w3-margin-bottom s6 m4 l3">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option w3-large" data-theme="theme-light" style="background-color: #fff; color: #000; cursor: pointer; border: 2px solid #009688; padding: 12px;">
                             Light
                         </div>
                     </div>
-                    <div class="w3-col s2">
-                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-blue" style="background-color: #003366; color: #fff; cursor: pointer;">
+                    <div class="w3-col w3-margin-bottom s6 m4 l3">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option w3-large" data-theme="theme-blue" style="background-color: #003366; color: #fff; cursor: pointer; padding: 12px;">
                             Blue
                         </div>
                     </div>
-                    <div class="w3-col s2">
-                        <div class="w3-card w3-padding w3-center w3-round theme-option" data-theme="theme-red" style="background-color: #660000; color: #fff; cursor: pointer;">
+                    <div class="w3-col w3-margin-bottom s6 m4 l3">
+                        <div class="w3-card w3-padding w3-center w3-round theme-option w3-large" data-theme="theme-red" style="background-color: #660000; color: #fff; cursor: pointer; padding: 12px;">
                             Red
                         </div>
                     </div>
-                    <div class="w3-col s4">
+                    <div class="w3-col w3-margin-bottom s12 m8 l6">
                         <div class="w3-row">
-                            <div class="w3-col s5" style="padding: 2px;">
-                                <input type="color" id="customColorPicker" class="w3-input" value="#009688" style="height: 38px; padding: 2px;">
+                            <div class="w3-col s4" style="padding: 2px;">
+                                <input type="color" id="customColorPicker" class="w3-input w3-large" value="#009688" style="height: 46px; padding: 2px;">
                             </div>
-                            <div class="w3-col s7" style="padding-left: 4px;">
-                                <div class="w3-card w3-padding w3-center w3-round" id="customColorPreview" style="background-color: #009688; color: #fff; cursor: pointer; height: 38px; line-height: 22px; font-size: 12px;">
-                                    Custom
+                            <div class="w3-col s8" style="padding-left: 4px;">
+                                <div class="w3-card w3-padding w3-center w3-round w3-large" id="customColorPreview" style="background-color: #009688; color: #fff; cursor: pointer; height: 46px; line-height: 28px;">
+                                    Custom Color
                                 </div>
                             </div>
                         </div>
