@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Speaker - Learn to Pronounce</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .word-card {
+            font-size: 64px;
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 400px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .word-card:hover {
+            transform: scale(1.02);
+        }
+        .speaker-icon {
+            font-size: 36px;
+            margin-left: 20px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="w3-container">
+        <div class="w3-row w3-center">
+            <h1>Word Speaker</h1>
+            <p class="w3-text-grey">Click on a word or speaker icon to hear it</p>
+            
+            <div class="w3-container" style="max-width: 400px; margin: 20px auto;">
+                <label class="w3-text-grey">Difficulty Level:</label>
+                <select id="difficultySelect" class="w3-select w3-border w3-round" onchange="setDifficulty(this.value)">
+                    <option value="two">Level 1: Two Letter Words</option>
+                    <option value="three-easy">Level 2: Simple Three Letter Words</option>
+                    <option value="three-medium">Level 3: More Three Letter Words</option>
+                    <option value="three-hard">Level 4: Challenge Words</option>
+                </select>
+            </div>
+
+            <div class="w3-bar w3-margin">
+                <button class="w3-button w3-teal w3-round-large" onclick="prevWord()">
+                    <i class="fa fa-arrow-left"></i> Previous
+                </button>
+                <button class="w3-button w3-blue w3-round-large" onclick="nextWord()">
+                    Next <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="word-card w3-card w3-round-large w3-light-grey" onclick="speakWord()">
+                <span id="currentWord">cat</span>
+                <i class="fa fa-volume-up speaker-icon w3-text-blue"></i>
+            </div>
+
+            <div class="w3-text-grey w3-small">
+                Use arrow keys ← → to navigate
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
