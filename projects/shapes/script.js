@@ -240,5 +240,17 @@ function nextShape() {
     drawCurrentShape();
 }
 
+// Add keyboard navigation
+document.addEventListener('keydown', (e) => {
+    switch(e.key) {
+        case 'ArrowLeft':
+            prevShape();
+            break;
+        case 'ArrowRight':
+            nextShape();
+            break;
+    }
+});
+
 // Initialize with first shape
 drawCurrentShape();
