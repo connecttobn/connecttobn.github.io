@@ -62,6 +62,7 @@ canvas.addEventListener('mouseout', stopDrawing);
 canvas.addEventListener('touchstart', e => {
     e.preventDefault();
     const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
     const mouseEvent = new MouseEvent('mousedown', {
         clientX: touch.clientX,
         clientY: touch.clientY
@@ -72,6 +73,7 @@ canvas.addEventListener('touchstart', e => {
 canvas.addEventListener('touchmove', e => {
     e.preventDefault();
     const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
     const mouseEvent = new MouseEvent('mousemove', {
         clientX: touch.clientX,
         clientY: touch.clientY
@@ -85,24 +87,34 @@ canvas.addEventListener('touchend', e => {
     canvas.dispatchEvent(mouseEvent);
 });
 
+function getCoordinates(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
 function startDrawing(e) {
     isDrawing = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    const coords = getCoordinates(e);
+    [lastX, lastY] = [coords.x, coords.y];
 }
 
 function draw(e) {
     if (!isDrawing) return;
     
+    const coords = getCoordinates(e);
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
-    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.lineTo(coords.x, coords.y);
     ctx.strokeStyle = '#000';
     ctx.lineWidth = 4;
     ctx.lineCap = 'round';
     ctx.setLineDash([]);
     ctx.stroke();
     
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    [lastX, lastY] = [coords.x, coords.y];
 }
 
 function stopDrawing() {
