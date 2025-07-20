@@ -8,8 +8,8 @@ function createToolHeader(currentTool) {
             <div class="w3-dropdown-click" style="display: inline-block;">
                 <button class="w3-button w3-text-white dropdown-button">
                     <span class="current-tool">Projects</span> <i class="fa fa-caret-down"></i>
-                </button>
-                <div id="toolDropdown" class="w3-dropdown-content w3-bar-block w3-card-4" style="z-index: 9999; margin-top: 0;">
+                </button> 
+                <div id="toolDropdown" class="w3-dropdown-content w3-bar-block w3-card-4 w3-medium" style="z-index: 9999; margin-top: 0;">
                     <div class="w3-container w3-text-black" style="padding: 8px">
                         <strong>Developer Tools</strong>
                     </div>
@@ -102,7 +102,7 @@ function createToolHeader(currentTool) {
     if (currentTool && toolNames[currentTool]) {
         const currentToolSpan = header.querySelector('.current-tool');
         if (currentToolSpan) {
-            currentToolSpan.textContent = toolNames[currentTool];
+            currentToolSpan.textContent = toolNames[currentTool] + '';
         }
     }
 
