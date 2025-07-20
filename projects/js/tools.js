@@ -113,10 +113,10 @@ document.addEventListener('DOMContentLoaded', function() {
             shortcutElement.style.position = 'absolute';
             shortcutElement.style.top = '5px';
             shortcutElement.style.right = '10px';
-            shortcutElement.style.backgroundColor = 'rgba(255,255,255,0.3)';
+            shortcutElement.style.backgroundColor = 'rgba(0,0,0,0.1)';
             shortcutElement.style.borderRadius = '4px';
             shortcutElement.style.padding = '2px 8px';
-            shortcutElement.style.color = 'white';
+            shortcutElement.style.color = 'black';
             shortcutElement.style.fontWeight = 'bold';
             
             container.appendChild(shortcutElement);
