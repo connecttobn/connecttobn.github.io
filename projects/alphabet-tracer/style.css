@@ -4,16 +4,16 @@ canvas {
     touch-action: none;
 }
 
-.w3-bar {
+.alphabet-tracer .w3-bar {
     display: flex;
     justify-content: center;
     gap: 10px;
 }
 
-button {
+.alphabet-tracer button {
     transition: transform 0.2s;
 }
 
-button:hover {
+.alphabet-tracer button:hover {
     transform: scale(1.05);
 }

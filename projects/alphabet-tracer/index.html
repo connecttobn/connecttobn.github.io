@@ -7,16 +7,18 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/projects/js/components/header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = createToolHeader('alphabet-tracer');
+            document.getElementById('header').appendChild(header);
+        });
+    </script>
 </head>
 <body>
-    <div class="w3-container w3-teal">
-        <div class="w3-bar w3-xlarge">
-            <a href="/" class="w3-bar-item w3-button">Home</a>
-            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
-        </div>
-    </div>
+    <div id="header"></div>
 
-    <div class="w3-container">
+    <div class="w3-container alphabet-tracer">
         <div class="w3-row w3-center">
             <h1>Alphabet Tracer</h1>
             <div class="w3-bar">

@@ -56,14 +56,16 @@
             }
         }
     </style>
+    <script src="/projects/js/components/header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = createToolHeader('maze-tracer');
+            document.getElementById('header').appendChild(header);
+        });
+    </script>
 </head>
 <body>
-    <div class="w3-container w3-teal">
-        <div class="w3-bar w3-xlarge"style="width: 100%;">
-            <a href="/" class="w3-bar-item w3-button">Home</a>
-            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
-        </div>
-    </div>
+    <div id="header"></div>
 
     <div class="w3-container">
         <div class="w3-row w3-center">

@@ -10,7 +10,7 @@
         body, html {
             height: 100%;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
         }
         
         .container {
@@ -145,14 +145,16 @@
             animation: pulse 0.5s;
         }
     </style>
+    <script src="/projects/js/components/header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = createToolHeader('event-countdown');
+            document.getElementById('header').appendChild(header);
+        });
+    </script>
 </head>
 <body>
-    <div class="w3-container w3-teal">
-        <div class="w3-bar w3-xlarge">
-            <a href="/" class="w3-bar-item w3-button">Home</a>
-            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
-        </div>
-    </div>
+    <div id="header"></div>
 
     <!-- Setup Container -->
     <div class="container setup-container" id="setupContainer">

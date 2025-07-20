@@ -6,19 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
-        body, html {
-            height: 100%;
+        body {
+            min-height: 100vh;
             margin: 0;
             display: flex;
             flex-direction: column;
+        }
+        #header {
+            flex: none;
         }
         .main-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             padding: 20px;
-            height: calc(100vh - 100px); /* Adjust for header height */
+            overflow-y: auto;
         }
         .content-container {
             display: flex;
@@ -154,15 +158,10 @@
     </style>
 </head>
 <body>
-    <div class="w3-container w3-teal">
-        <div class="w3-bar w3-xlarge">
-            <a href="/" class="w3-bar-item w3-button">Home</a>
-            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
-        </div>
-    </div>
+    <!-- Header Container -->
+    <div id="header"></div>
 
     <div class="main-container">
-        <h2>JSON Formatter & Validator</h2>
 
         <div class="content-container">
             <div class="input-section">
@@ -197,7 +196,24 @@
         </div>
     </div>
 
+    <script src="/projects/js/components/header.js"></script>
     <script>
+        // Initialize the header
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof createToolHeader === 'undefined') {
+                console.error('Header component not loaded');
+                return;
+            }
+            const header = createToolHeader('json-formatter');
+            const headerContainer = document.getElementById('header');
+            if (!headerContainer) {
+                console.error('Header container not found');
+                return;
+            }
+            headerContainer.appendChild(header);
+            console.log('Header initialized successfully');
+        });
+
         // Function to handle both single and double quotes in JSON
         function parseJSON(str) {
             if (!str.trim()) {

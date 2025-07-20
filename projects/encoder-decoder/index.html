@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
         }
         
         .container {
@@ -125,14 +125,16 @@
             }
         }
     </style>
+    <script src="/projects/js/components/header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = createToolHeader('encoder-decoder');
+            document.getElementById('header').appendChild(header);
+        });
+    </script>
 </head>
 <body>
-    <div class="w3-container w3-teal">
-        <div class="w3-bar w3-xlarge">
-            <a href="/" class="w3-bar-item w3-button">Home</a>
-            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
-        </div>
-    </div>
+    <div id="header"></div>
 
     <div class="container">
         <h1 class="w3-center">Encoder Decoder</h1>
