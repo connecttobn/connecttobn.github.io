@@ -7,12 +7,76 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            height: calc(100vh - 100px); /* Adjust for header height */
+        }
+        .content-container {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            min-height: 0; /* Important for Firefox */
+        }
+        .input-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Important for Firefox */
+        }
+        .output-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Important for Firefox */
+        }
+        .editor-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
         .json-input {
             width: 100%;
-            height: 300px;
+            flex: 1;
             font-family: monospace;
-            padding: 10px;
-            resize: vertical;
+            padding: 10px 30px 10px 10px;
+            resize: none;
+            margin-bottom: 10px;
+        }
+        .json-output {
+            width: 100%;
+            flex: 1;
+            font-family: monospace;
+            padding: 10px 30px 10px 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #009688;
+            transition: color 0.3s;
+            background: white;
+            padding: 2px;
+            border-radius: 3px;
+            z-index: 1;
+        }
+        .copy-button:hover {
+            color: #004d40;
         }
         .error {
             color: red;
@@ -22,11 +86,70 @@
             color: green;
             margin-top: 10px;
         }
-        .toolbar {
-            margin: 10px 0;
+        .copy-button {
+            cursor: pointer;
+            color: #009688;
+            transition: color 0.3s;
         }
-        .toolbar button {
+        .copy-button:hover {
+            color: #004d40;
+        }
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+        .collapsible:hover {
+            background-color: #eee;
+        }
+        .collapsed > .collapsible-content {
+            display: none;
+        }
+        .toggle-icon {
+            display: inline-block;
+            width: 20px;
+            color: #666;
+        }
+        .property {
+            color: #0451a5;
+        }
+        .string {
+            color: #a31515;
+        }
+        .number {
+            color: #098658;
+        }
+        .boolean {
+            color: #0000ff;
+        }
+        .null {
+            color: #808080;
+        }
+        .indent {
+            margin-left: 20px;
+        }
+        .section-title {
+            margin-bottom: 10px;
+            color: #666;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-title .title-text {
             margin-right: 10px;
+        }
+        .section-title .title-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .section-title .w3-button {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .content-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -38,47 +161,169 @@
         </div>
     </div>
 
-    <div class="w3-container w3-margin">
+    <div class="main-container">
         <h2>JSON Formatter & Validator</h2>
-        
-        <div class="toolbar">
-            <button onclick="formatJSON()" class="w3-button w3-teal">Format JSON</button>
-            <button onclick="minifyJSON()" class="w3-button w3-teal">Minify JSON</button>
-            <button onclick="validateJSON()" class="w3-button w3-teal">Validate JSON</button>
-            <button onclick="copyToClipboard()" class="w3-button w3-teal">Copy to Clipboard</button>
-            <button onclick="clearJSON()" class="w3-button w3-teal">Clear</button>
-        </div>
 
-        <div class="w3-row">
-            <div class="w3-col m12">
-                <textarea id="jsonInput" class="json-input w3-border" placeholder="Paste your JSON here..."></textarea>
+        <div class="content-container">
+            <div class="input-section">
+                <div class="section-title">
+                    <span class="title-text">Input JSON</span>
+                    <div class="title-buttons">
+                        <button onclick="formatJSON()" class="w3-button w3-teal">Format</button>
+                        <button onclick="minifyJSON()" class="w3-button w3-teal">Minify</button>
+                        <button onclick="validateJSON()" class="w3-button w3-teal">Validate</button>
+                        <button onclick="clearJSON()" class="w3-button w3-teal">Clear</button>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <textarea id="jsonInput" class="json-input w3-border" placeholder="Paste your JSON here... (supports both single and double quotes)"></textarea>
+                    <i class="fa fa-copy copy-button" onclick="copyInput()" title="Copy to clipboard"></i>
+                </div>
                 <div id="message" class="w3-margin-top"></div>
+            </div>
+            <div class="output-section">
+                <div class="section-title">
+                    <span class="title-text">Formatted Output</span>
+                    <div class="title-buttons">
+                        <button onclick="expandAll()" class="w3-button w3-teal">Expand All</button>
+                        <button onclick="collapseAll()" class="w3-button w3-teal">Collapse All</button>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <div id="jsonOutput" class="json-output"></div>
+                    <i class="fa fa-copy copy-button" onclick="copyOutput()" title="Copy to clipboard"></i>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Function to handle both single and double quotes in JSON
+        function parseJSON(str) {
+            if (!str.trim()) {
+                throw new Error('Empty input');
+            }
+
+            // Convert single quotes to double quotes, but preserve escaped single quotes
+            str = str.replace(/([^\\])'/g, '$1"');
+            str = str.replace(/^'/, '"'); // Handle string starting with single quote
+            str = str.replace(/'$/, '"'); // Handle string ending with single quote
+            
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                // Try to provide more helpful error messages
+                if (str.includes("'")) {
+                    throw new Error('Invalid JSON format. Check for unmatched single quotes.');
+                }
+                throw new Error('Invalid JSON format: ' + e.message);
+            }
+        }
+
+        function createCollapsibleElement(key, value, isArrayItem = false) {
+            const container = document.createElement('div');
+            
+            if (typeof value === 'object' && value !== null) {
+                const header = document.createElement('div');
+                header.className = 'collapsible';
+                
+                const toggleIcon = document.createElement('span');
+                toggleIcon.className = 'toggle-icon';
+                toggleIcon.innerHTML = '▼';
+                header.appendChild(toggleIcon);
+
+                if (!isArrayItem) {
+                    const keySpan = document.createElement('span');
+                    keySpan.className = 'property';
+                    keySpan.textContent = `"${key}": `;
+                    header.appendChild(keySpan);
+                }
+
+                const preview = document.createElement('span');
+                preview.textContent = Array.isArray(value) ? '[...]' : '{...}';
+                header.appendChild(preview);
+
+                const content = document.createElement('div');
+                content.className = 'collapsible-content indent';
+
+                if (Array.isArray(value)) {
+                    value.forEach((item, index) => {
+                        const itemElement = createCollapsibleElement(index, item, true);
+                        if (index < value.length - 1) {
+                            itemElement.appendChild(document.createTextNode(','));
+                        }
+                        content.appendChild(itemElement);
+                    });
+                } else {
+                    Object.entries(value).forEach(([k, v], index, arr) => {
+                        const propertyElement = createCollapsibleElement(k, v);
+                        if (index < arr.length - 1) {
+                            propertyElement.appendChild(document.createTextNode(','));
+                        }
+                        content.appendChild(propertyElement);
+                    });
+                }
+
+                container.appendChild(header);
+                container.appendChild(content);
+
+                header.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    container.classList.toggle('collapsed');
+                    toggleIcon.innerHTML = container.classList.contains('collapsed') ? '▶' : '▼';
+                });
+            } else {
+                if (!isArrayItem) {
+                    const keySpan = document.createElement('span');
+                    keySpan.className = 'property';
+                    keySpan.textContent = `"${key}": `;
+                    container.appendChild(keySpan);
+                }
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = typeof value;
+                if (typeof value === 'string') {
+                    valueSpan.textContent = `"${value}"`;
+                } else if (value === null) {
+                    valueSpan.textContent = 'null';
+                    valueSpan.className = 'null';
+                } else {
+                    valueSpan.textContent = value;
+                }
+                container.appendChild(valueSpan);
+            }
+
+            return container;
+        }
+
         function formatJSON() {
             const input = document.getElementById('jsonInput');
+            const output = document.getElementById('jsonOutput');
             const message = document.getElementById('message');
             try {
-                const json = JSON.parse(input.value);
-                input.value = JSON.stringify(json, null, 2);
+                const json = parseJSON(input.value);
+                output.innerHTML = '';
+                const formattedElement = createCollapsibleElement('root', json);
+                formattedElement.firstChild.style.display = 'none'; // Hide the root label
+                formattedElement.lastChild.className = 'collapsible-content'; // Remove indent from root
+                output.appendChild(formattedElement);
                 message.innerHTML = '<span class="success">JSON formatted successfully!</span>';
             } catch (e) {
-                message.innerHTML = '<span class="error">Invalid JSON: ' + e.message + '</span>';
+                message.innerHTML = '<span class="error">' + e.message + '</span>';
             }
         }
 
         function minifyJSON() {
             const input = document.getElementById('jsonInput');
+            const output = document.getElementById('jsonOutput');
             const message = document.getElementById('message');
             try {
-                const json = JSON.parse(input.value);
-                input.value = JSON.stringify(json);
+                const json = parseJSON(input.value);
+                const minified = JSON.stringify(json);
+                output.innerHTML = `<pre style="margin: 0;">${minified}</pre>`;
                 message.innerHTML = '<span class="success">JSON minified successfully!</span>';
             } catch (e) {
-                message.innerHTML = '<span class="error">Invalid JSON: ' + e.message + '</span>';
+                message.innerHTML = '<span class="error">' + e.message + '</span>';
             }
         }
 
@@ -86,27 +331,59 @@
             const input = document.getElementById('jsonInput');
             const message = document.getElementById('message');
             try {
-                JSON.parse(input.value);
+                parseJSON(input.value);
                 message.innerHTML = '<span class="success">Valid JSON!</span>';
             } catch (e) {
-                message.innerHTML = '<span class="error">Invalid JSON: ' + e.message + '</span>';
+                message.innerHTML = '<span class="error">' + e.message + '</span>';
             }
         }
 
-        function copyToClipboard() {
+        function copyInput() {
             const input = document.getElementById('jsonInput');
             input.select();
             document.execCommand('copy');
             const message = document.getElementById('message');
-            message.innerHTML = '<span class="success">Copied to clipboard!</span>';
+            message.innerHTML = '<span class="success">Input copied to clipboard!</span>';
             setTimeout(() => message.innerHTML = '', 2000);
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('jsonOutput');
+            const text = output.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const message = document.getElementById('message');
+                message.innerHTML = '<span class="success">Output copied to clipboard!</span>';
+                setTimeout(() => message.innerHTML = '', 2000);
+            });
         }
 
         function clearJSON() {
             const input = document.getElementById('jsonInput');
+            const output = document.getElementById('jsonOutput');
             const message = document.getElementById('message');
             input.value = '';
+            output.innerHTML = '';
             message.innerHTML = '';
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.collapsed').forEach(element => {
+                element.classList.remove('collapsed');
+                element.querySelector('.toggle-icon').innerHTML = '▼';
+            });
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.collapsible').forEach(element => {
+                const container = element.parentElement;
+                // Skip the root container which has no toggle icon
+                if (element.style.display === 'none') return;
+                
+                if (!container.classList.contains('collapsed')) {
+                    container.classList.add('collapsed');
+                    element.querySelector('.toggle-icon').innerHTML = '▶';
+                }
+            });
         }
     </script>
 </body>
