@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JSON Formatter & Validator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .json-input {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            padding: 10px;
+            resize: vertical;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        .toolbar {
+            margin: 10px 0;
+        }
+        .toolbar button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-teal">
+        <div class="w3-bar w3-xlarge">
+            <a href="/" class="w3-bar-item w3-button">Home</a>
+            <a href="/projects/" class="w3-bar-item w3-button">Projects</a>
+        </div>
+    </div>
+
+    <div class="w3-container w3-margin">
+        <h2>JSON Formatter & Validator</h2>
+        
+        <div class="toolbar">
+            <button onclick="formatJSON()" class="w3-button w3-teal">Format JSON</button>
+            <button onclick="minifyJSON()" class="w3-button w3-teal">Minify JSON</button>
+            <button onclick="validateJSON()" class="w3-button w3-teal">Validate JSON</button>
+            <button onclick="copyToClipboard()" class="w3-button w3-teal">Copy to Clipboard</button>
+            <button onclick="clearJSON()" class="w3-button w3-teal">Clear</button>
+        </div>
+
+        <div class="w3-row">
+            <div class="w3-col m12">
+                <textarea id="jsonInput" class="json-input w3-border" placeholder="Paste your JSON here..."></textarea>
+                <div id="message" class="w3-margin-top"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatJSON() {
+            const input = document.getElementById('jsonInput');
+            const message = document.getElementById('message');
+            try {
+                const json = JSON.parse(input.value);
+                input.value = JSON.stringify(json, null, 2);
+                message.innerHTML = '<span class="success">JSON formatted successfully!</span>';
+            } catch (e) {
+                message.innerHTML = '<span class="error">Invalid JSON: ' + e.message + '</span>';
+            }
+        }
+
+        function minifyJSON() {
+            const input = document.getElementById('jsonInput');
+            const message = document.getElementById('message');
+            try {
+                const json = JSON.parse(input.value);
+                input.value = JSON.stringify(json);
+                message.innerHTML = '<span class="success">JSON minified successfully!</span>';
+            } catch (e) {
+                message.innerHTML = '<span class="error">Invalid JSON: ' + e.message + '</span>';
+            }
+        }
+
+        function validateJSON() {
+            const input = document.getElementById('jsonInput');
+            const message = document.getElementById('message');
+            try {
+                JSON.parse(input.value);
+                message.innerHTML = '<span class="success">Valid JSON!</span>';
+            } catch (e) {
+                message.innerHTML = '<span class="error">Invalid JSON: ' + e.message + '</span>';
+            }
+        }
+
+        function copyToClipboard() {
+            const input = document.getElementById('jsonInput');
+            input.select();
+            document.execCommand('copy');
+            const message = document.getElementById('message');
+            message.innerHTML = '<span class="success">Copied to clipboard!</span>';
+            setTimeout(() => message.innerHTML = '', 2000);
+        }
+
+        function clearJSON() {
+            const input = document.getElementById('jsonInput');
+            const message = document.getElementById('message');
+            input.value = '';
+            message.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
