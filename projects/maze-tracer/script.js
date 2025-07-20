@@ -7,7 +7,7 @@ let lastY = 0;
 
 // Maze properties
 const gridSize = 4; // 4x4 grid for simple mazes
-const cellSize = canvas.width / gridSize;
+let cellSize = canvas.width / gridSize; // This will be updated in resizeCanvas
 let maze = [];
 let obstacles = [];
 let pathColor = '#FF9800';
@@ -39,15 +39,21 @@ function init() {
 function resizeCanvas() {
     const container = canvas.parentElement;
     const containerWidth = container.clientWidth;
-    const size = Math.min(containerWidth, 600);
     
-    // Update canvas size
-    canvas.style.width = size + 'px';
-    canvas.style.height = size + 'px';
+    // Make canvas square based on container width
+    canvas.width = containerWidth;
+    canvas.height = containerWidth;
     
-    // Keep the drawing context scale correct
-    const scale = size / canvas.width;
-    ctx.scale(scale, scale);
+    // Reset any transformations
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    
+    // Calculate cell size based on canvas width
+    cellSize = containerWidth / gridSize;
+    
+    // Redraw the current maze
+    if (maze.length > 0) {
+        drawMaze();
+    }
 }
 
 // Event handlers
