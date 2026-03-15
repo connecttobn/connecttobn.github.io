@@ -8,6 +8,8 @@
   --card: #f8fafc;
   --glass: rgba(255, 255, 255, 0.6);
   --shadow: 0 6px 18px rgba(11, 20, 40, 0.08);
+  --submit: lightgreen;
+  --cancel: rgb(245, 186, 186)
 }
 
 .theme-dark {
@@ -20,6 +22,8 @@
   --card: rgba(255, 255, 255, 0.03);
   --glass: rgba(255, 255, 255, 0.04);
   --shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+  --submit: #0b6b3a;
+  --cancel: rgb(255 56 78)
 }
 
 * {
@@ -461,6 +465,27 @@ select {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: white
+}
+
+.calc-actions {
+  .btn{
+    font-weight: normal;
+    color: var(--text);
+  }
+  .btn.primary {
+    background: var(--submit);
+    border: 1px solid green;
+  }
+
+  .btn.outline {
+    background: var(--cancel);
+    border: 1px solid rgb(255, 108, 108);
+  }
+}
+
+.calc-diagram {
+  width: 150px;
+  height: auto;
 }
 
 .hero-card {
@@ -945,7 +970,6 @@ a:focus {
             gap: 15px;
         }
 
-        /* Mock icons using CSS */
         .icon-circle {
           color: green;
             width: 40px;

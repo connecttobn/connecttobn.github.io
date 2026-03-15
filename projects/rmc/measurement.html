@@ -10,16 +10,33 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="AM CONCRETE">
-        <img src="logo.png" alt="AM CONCRETE logo" class="logo">
+      <a class="brand" href="#" aria-label="AM CONCRETE">
+  <img src="logo.png" alt="AM CONCRETE logo" class="logo">
       </a>
+        <button id="menu-toggle" class="menu-toggle" aria-label="Open navigation" aria-expanded="false">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
       <nav class="main-nav">
         <a href="index.html#about"><i class="fa-solid fa-info-circle" aria-hidden="true"></i> About</a>
-        <a href="index.html#services"><i class="fa-solid fa-compass-drafting icon" aria-hidden="true"></i> Services</a>
+        <div class="nav-item nav-dropdown">
+          <a href="index.html#services" class="drop-toggle"><i class="fa-solid fa-compass-drafting icon" aria-hidden="true"></i> Services <i class="fa-solid fa-caret-down" aria-hidden="true"></i></a>
+          <div class="dropdown-menu" aria-label="Services submenu">
+            <a href="index.html#service-ready-mix"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>Ready mix concrete</a>
+            <a href="index.html#service-transport"><i class="fa-solid fa-truck" aria-hidden="true"></i>Transport & pumping</a>
+            <a href="index.html#service-technical"><i class="fa-solid fa-tools" aria-hidden="true"></i>Technical services</a>
+            <a href="#" target="_blank" rel="noopener"><i class="fa-solid fa-calculator" aria-hidden="true"></i>Measurement</a>
+          </div>
+        </div>
         <a href="index.html#projects"><i class="fa-solid fa-building" aria-hidden="true"></i> Projects</a>
         <a href="index.html#locations"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Locations</a>
+        <a href="index.html#careers"><i class="fa-solid fa-user-tie" aria-hidden="true"></i> Careers</a>
         <a href="index.html#contact"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Contact</a>
       </nav>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-ghost" aria-label="Toggle theme" aria-pressed="false">
+          <i class="fa-solid fa-sun" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -35,7 +52,7 @@
     
                 <div class="input-container">
                     <div class="input-row">
-                        <label for="slab-length">Length</label>
+                        <label for="slab-length">Length (l)</label>
                         <input type="number" id="slab-length" min="0" step="any" placeholder="5">
                         <select id="slab-length-unit">
                             <option value="m">meters</option>
@@ -46,7 +63,7 @@
                     </div>
     
                     <div class="input-row">
-                        <label for="slab-width">Width</label>
+                        <label for="slab-width">Width (w)</label>
                         <input type="number" id="slab-width" min="0" step="any" placeholder="2.5">
                         <select id="slab-width-unit">
                             <option value="m">meters</option>
@@ -57,7 +74,7 @@
                     </div>
     
                     <div class="input-row">
-                        <label for="slab-depth">Thickness / Height</label>
+                        <label for="slab-depth">Thickness / Height (h)</label>
                         <input type="number" id="slab-depth" min="0" step="any" placeholder="0.15">
                         <select id="slab-depth-unit">
                             <option value="m">meters</option>
@@ -77,6 +94,7 @@
                 </div>
             </div>
             <div class="calc-result">
+                <img src="img/slab.png" alt="Diagram of slab dimensions" class="calc-diagram">
                 <h3>Result</h3>
                 <p id="slab-output">Enter values and click Calculate.</p>
             </div>
@@ -89,7 +107,7 @@
             <div class="calc-inputs">
                 <div class="input-container">
                     <div class="input-row">
-                        <label for="round-d">Diameter</label>
+                        <label for="round-d">Diameter (d)</label>
                         <input type="number" id="round-d" min="0" step="any" placeholder="2.5">
                         <select id="round-d-unit">
                             <option value="m">meters</option>
@@ -100,7 +118,7 @@
                     </div>
     
                     <div class="input-row">
-                        <label for="round-h">Depth / Height</label>
+                        <label for="round-h">Depth / Height (h)</label>
                         <input type="number" id="round-h" min="0" step="any" placeholder="0.5">
                         <select id="round-h-unit">
                             <option value="m">meters</option>
@@ -123,6 +141,7 @@
                 </div>
             </div>
             <div class="calc-result">
+                <img src="img/pipe.png" alt="Diagram of round footing dimensions" class="calc-diagram">
                 <h3>Result</h3>
                 <p id="round-output">Enter values and click Calculate.</p>
             </div>
@@ -135,7 +154,7 @@
             <div class="calc-inputs">
                 <div class="input-container">
                     <div class="input-row">
-                        <label for="tube-d1">Outer Diameter</label>
+                        <label for="tube-d1">Outer Diameter (d1)</label>
                         <input type="number" id="tube-d1" min="0" step="any" placeholder="5">
                         <select id="tube-d1-unit">
                             <option value="m">meters</option>
@@ -146,7 +165,7 @@
                     </div>
     
                     <div class="input-row">
-                        <label for="tube-d2">Inner Diameter</label>
+                        <label for="tube-d2">Inner Diameter (d2)</label>
                         <input type="number" id="tube-d2" min="0" step="any" placeholder="4">
                         <select id="tube-d2-unit">
                             <option value="m">meters</option>
@@ -157,7 +176,7 @@
                     </div>
     
                     <div class="input-row">
-                        <label for="tube-h">Height</label>
+                        <label for="tube-h">Height (h)</label>
                         <input type="number" id="tube-h" min="0" step="any" placeholder="0.2">
                         <select id="tube-h-unit">
                             <option value="m">meters</option>
@@ -178,6 +197,7 @@
                 </div>
             </div>
             <div class="calc-result">
+                <img src="img/tube.png" alt="Diagram of tube dimensions" class="calc-diagram">
                 <h3>Result</h3>
                 <p id="tube-output">Enter values and click Calculate.</p>
             </div>
@@ -255,6 +275,7 @@
                 </div>
             </div>
             <div class="calc-result">
+                <img src="img/curb.png" alt="Diagram of curb dimensions" class="calc-diagram" style="width: 200px;">
                 <h3>Result</h3>
                 <p id="curb-output">Enter values and click Calculate.</p>
             </div>
@@ -321,6 +342,7 @@
                 </div>
             </div>
             <div class="calc-result">
+                <img src="img/stairs.png" alt="Diagram of stairs dimensions" class="calc-diagram" style="width: 200px;">
                 <h3>Result</h3>
                 <p id="st-output">Enter values and click Calculate.</p>
             </div>
@@ -332,7 +354,7 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div><a href="index.html">← Back to AM CONCRETE</a></div>
-        <div class="footer-links"><a href="https://sunilbn.com" target="_blank" rel="noopener">Built by sunilbn.com</a></div>
+        <div class="footer-links"><a href="https://sunilbn.com" target="_blank" rel="noopener" style="font-size:8px;">built by sunilbn.com</a></div>
       </div>
     </footer>
 
@@ -415,5 +437,6 @@
 
 })();
 </script>
+  <script src="script.js"></script>
 </body>
 </html>
