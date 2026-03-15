@@ -156,7 +156,7 @@ body {
   left: -100%;
   top: 0;
   bottom: 0;
-  width: 84%;
+  width: 100%;
   max-width: 100%;
   background: var(--surface);
   z-index: 50;
@@ -490,7 +490,7 @@ select {
 }
 
 .hero-card {
-  width: 380px;
+  max-width: 380px;
   background: rgba(255, 255, 255, 0.08);
   padding: 1rem;
   border-radius: 12px;
@@ -873,6 +873,7 @@ a:focus {
 
 .about-text {
   flex: 1;
+  padding: 0px 12px;
 }
 
 .about-image {
@@ -919,8 +920,8 @@ a:focus {
 }
 
 .image-item img {
-  width: 450px;
-  height: 400px;
+  max-width: 450px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 10px var(--shadow);
