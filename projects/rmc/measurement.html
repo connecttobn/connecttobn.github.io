@@ -53,10 +53,10 @@
                 <div class="input-container">
                     <div class="input-row">
                         <label for="slab-length">Length (l)</label>
-                        <input type="number" id="slab-length" min="0" step="any" placeholder="5">
+                        <input type="number" id="slab-length" min="0" step="any" placeholder="40" value="40">
                         <select id="slab-length-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -64,10 +64,10 @@
     
                     <div class="input-row">
                         <label for="slab-width">Width (w)</label>
-                        <input type="number" id="slab-width" min="0" step="any" placeholder="2.5">
+                        <input type="number" id="slab-width" min="0" step="any" placeholder="60" value="60">
                         <select id="slab-width-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -75,17 +75,17 @@
     
                     <div class="input-row">
                         <label for="slab-depth">Thickness / Height (h)</label>
-                        <input type="number" id="slab-depth" min="0" step="any" placeholder="0.15">
+                        <input type="number" id="slab-depth" min="0" step="any" placeholder="6" value="6">
                         <select id="slab-depth-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
                 </div>
                 <div class="input-row">
-                    <label id="slab-qty">Quantity</label>
+                    <label for="slab-qty">Quantity</label>
                     <input type="number" id="slab-qty" min="1" step="1" value="1">
                 </div>
                 <div class="calc-actions">
@@ -108,21 +108,21 @@
                 <div class="input-container">
                     <div class="input-row">
                         <label for="round-d">Diameter (d)</label>
-                        <input type="number" id="round-d" min="0" step="any" placeholder="2.5">
+                        <input type="number" id="round-d" min="0" step="any" placeholder="24" value="24">
                         <select id="round-d-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="round-h">Depth / Height (h)</label>
-                        <input type="number" id="round-h" min="0" step="any" placeholder="0.5">
+                        <input type="number" id="round-h" min="0" step="any" placeholder="10" value="10">
                         <select id="round-h-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -155,32 +155,32 @@
                 <div class="input-container">
                     <div class="input-row">
                         <label for="tube-d1">Outer Diameter (d1)</label>
-                        <input type="number" id="tube-d1" min="0" step="any" placeholder="5">
+                        <input type="number" id="tube-d1" min="0" step="any" placeholder="30" value="30">
                         <select id="tube-d1-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="tube-d2">Inner Diameter (d2)</label>
-                        <input type="number" id="tube-d2" min="0" step="any" placeholder="4">
+                        <input type="number" id="tube-d2" min="0" step="any" placeholder="24" value="24">
                         <select id="tube-d2-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="tube-h">Height (h)</label>
-                        <input type="number" id="tube-h" min="0" step="any" placeholder="0.2">
+                        <input type="number" id="tube-h" min="0" step="any" placeholder="7" value="7">
                         <select id="tube-h-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -211,21 +211,21 @@
                 <div class="input-container">
                     <div class="input-row">
                         <label for="curb-depth">Curb Depth</label>
-                        <input type="number" id="curb-depth" min="0" step="any" placeholder="0.04">
+                        <input type="number" id="curb-depth" min="0" step="any" placeholder="4">
                         <select id="curb-depth-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="curb-gw">Gutter Width</label>
-                        <input type="number" id="curb-gw" min="0" step="any" placeholder="0.10">
+                        <input type="number" id="curb-gw" min="0" step="any" placeholder="3" value="3">
                         <select id="curb-gw-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -233,10 +233,10 @@
     
                     <div class="input-row">
                         <label for="curb-h">Curb Height</label>
-                        <input type="number" id="curb-h" min="0" step="any" placeholder="0.04">
+                        <input type="number" id="curb-h" min="0" step="any" placeholder="3" value="3">
                         <select id="curb-h-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -244,21 +244,21 @@
     
                     <div class="input-row">
                         <label for="curb-flag">Flag Thickness</label>
-                        <input type="number" id="curb-flag" min="0" step="any" placeholder="0.05">
+                        <input type="number" id="curb-flag" min="0" step="any" placeholder="4" value="4">
                         <select id="curb-flag-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="curb-l">Length</label>
-                        <input type="number" id="curb-l" min="0" step="any" placeholder="10">
+                        <input type="number" id="curb-l" min="0" step="any" placeholder="10" value="10">
                         <select id="curb-l-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -289,32 +289,32 @@
                 <div class="input-container">
                     <div class="input-row">
                         <label for="st-run">Run (depth of step)</label>
-                        <input type="number" id="st-run" min="0" step="any" placeholder="0.12">
+                        <input type="number" id="st-run" min="0" step="any" placeholder="10" value="10">
                         <select id="st-run-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="st-rise">Rise (height of step)</label>
-                        <input type="number" id="st-rise" min="0" step="any" placeholder="0.06">
+                        <input type="number" id="st-rise" min="0" step="any" placeholder="6" value="6">
                         <select id="st-rise-unit">
                             <option value="m">meters</option>
                             <option value="ft">feet</option>
                             <option value="cm">centimeters</option>
-                            <option value="in">inches</option>
+                            <option value="in" selected>inches</option>
                         </select>
                     </div>
     
                     <div class="input-row">
                         <label for="st-width">Width</label>
-                        <input type="number" id="st-width" min="0" step="any" placeholder="1">
+                        <input type="number" id="st-width" min="0" step="any" placeholder="3" value="3">
                         <select id="st-width-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -322,10 +322,10 @@
     
                     <div class="input-row">
                         <label for="st-plat">Platform Depth</label>
-                        <input type="number" id="st-plat" min="0" step="any" placeholder="0.05">
+                        <input type="number" id="st-plat" min="0" step="any" placeholder="3" value="3">
                         <select id="st-plat-unit">
                             <option value="m">meters</option>
-                            <option value="ft">feet</option>
+                            <option value="ft" selected>feet</option>
                             <option value="cm">centimeters</option>
                             <option value="in">inches</option>
                         </select>
@@ -333,7 +333,7 @@
     
                     <div class="input-row">
                         <label for="st-steps">Number of Steps</label>
-                        <input type="number" id="st-steps" min="1" step="1" value="5">
+                        <input type="number" id="st-steps" min="1" step="1" value="10">
                     </div>
                 </div>
                 <div class="calc-actions">
