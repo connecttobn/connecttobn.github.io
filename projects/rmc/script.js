@@ -4,7 +4,6 @@
 
   // Helper to set theme toggle labels (icon + text). Uses DOM queries so it can be called from other scopes.
   function setToggleLabels(name){
-    debugger;
     const isDark = name === 'dark';
     const labelText = isDark ? 'Light theme' : 'Dark theme';
     const iconClass = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
