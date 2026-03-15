@@ -2,21 +2,22 @@
 (function(){
   const body = document.body;
 
-  // Helper to set theme toggle labels (icon + text). Uses DOM queries so it can be called from other scopes.
+  // --- Updated Theme Logic ---
+
   function setToggleLabels(name){
     const isDark = name === 'dark';
     const labelText = isDark ? 'Light theme' : 'Dark theme';
     const iconClass = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    
     const headerToggleEl = document.getElementById('theme-toggle');
     const mobileToggleEl = document.getElementById('mobile-theme-toggle');
-    const html = `<i class="${iconClass}" aria-hidden="true" style="color: rgb(255, 212, 59);"></i> <span class="theme-label">${labelText}</span>`;
+
     if(headerToggleEl) {
       headerToggleEl.innerHTML = `<i class="${iconClass}" aria-hidden="true" style="color: rgb(255, 212, 59);"></i>`;
-      headerToggleEl.setAttribute('aria-pressed', isDark);
     }
     if(mobileToggleEl) {
-      mobileToggleEl.innerHTML = html;
-      mobileToggleEl.setAttribute('aria-pressed', isDark);
+      // For mobile, we show both the icon and the text label
+      mobileToggleEl.innerHTML = `<i class="${iconClass}" aria-hidden="true" style="color: rgb(255, 212, 59);"></i> <span class="theme-label">${labelText}</span>`;
     }
   }
 
@@ -31,6 +32,31 @@
     const isDark = body.classList.contains('theme-dark');
     applyTheme(isDark ? 'light' : 'dark');
   }
+
+  // Global initialization
+  const saved = localStorage.getItem('site-theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  applyTheme(saved);
+
+  // Use event delegation for toggles so they work even if rendered late
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#theme-toggle')) {
+      toggleTheme();
+    }
+  });
+  const mobileThemeToggleEl = document.getElementById('mobile-theme-toggle');
+
+if (mobileThemeToggleEl) {
+  mobileThemeToggleEl.addEventListener('click', function(e) {
+    // .closest() ensures that even if you click the icon or text, 
+    // it treats it as a click on the button itself.
+    const btn = e.target.closest('#mobile-theme-toggle');
+    if (btn) {
+      toggleTheme(); // Triggers your existing global theme toggle function
+    }
+  });
+}
+
 
   // init theme based on saved preference or system
   (function initTheme(){
