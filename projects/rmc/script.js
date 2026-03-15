@@ -4,14 +4,15 @@
 
   // Helper to set theme toggle labels (icon + text). Uses DOM queries so it can be called from other scopes.
   function setToggleLabels(name){
+    debugger;
     const isDark = name === 'dark';
     const labelText = isDark ? 'Light theme' : 'Dark theme';
     const iconClass = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
     const headerToggleEl = document.getElementById('theme-toggle');
     const mobileToggleEl = document.getElementById('mobile-theme-toggle');
-    const html = `<i class="${iconClass}" aria-hidden="true"></i> <span class="theme-label">${labelText}</span>`;
+    const html = `<i class="${iconClass}" aria-hidden="true" style="color: rgb(255, 212, 59);"></i> <span class="theme-label">${labelText}</span>`;
     if(headerToggleEl) {
-      headerToggleEl.innerHTML = html;
+      headerToggleEl.innerHTML = `<i class="${iconClass}" aria-hidden="true" style="color: rgb(255, 212, 59);"></i>`;
       headerToggleEl.setAttribute('aria-pressed', isDark);
     }
     if(mobileToggleEl) {
