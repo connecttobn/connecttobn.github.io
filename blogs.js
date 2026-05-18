@@ -2,15 +2,15 @@
 const BLOGS = [
   {
     slug: 'building-scalable-systems',
-    file: 'blogs/building-scalable-systems.md'
+    file: '/blogs/building-scalable-systems.md'
   },
   {
     slug: 'art-of-mentoring',
-    file: 'blogs/art-of-mentoring.md'
+    file: '/blogs/art-of-mentoring.md'
   },
   {
     slug: 'mastering-modern-javascript',
-    file: 'blogs/mastering-modern-javascript.md'
+    file: '/blogs/mastering-modern-javascript.md'
   }
   // Add more blogs here in the format:
   // { slug: 'url-slug', file: 'blogs/filename.md' }
