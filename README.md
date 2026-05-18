@@ -3,7 +3,7 @@ This repository is to showcase my portfolio.
 
 Suggestions are most welcome! drop in a mail or create an issue. :)
 
-Email: connecttobn@gmail.com
+Email: connecttobn [at] gmail.com
 
 
 Visit: https://sunilbn.com/ to see it live
