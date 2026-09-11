@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alphabet Tracer - Learn Writing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/projects/js/components/header.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = createToolHeader('alphabet-tracer');
+            document.getElementById('header').appendChild(header);
+        });
+    </script>
+</head>
+<body>
+    <div id="header"></div>
+
+    <div class="w3-container alphabet-tracer">
+        <div class="w3-row w3-center">
+            <h1>Alphabet Tracer</h1>
+            <div class="w3-bar">
+                <button class="w3-button w3-teal" onclick="setMode('uppercase')">AZ</button>
+                <button class="w3-button w3-blue" onclick="setMode('lowercase')">az</button>
+                <button class="w3-button w3-green" onclick="setMode('numbers')">1</button>
+                <button class="w3-button w3-purple" onclick="setMode('kannada')">ಕ</button>
+                <button class="w3-button w3-deep-orange" onclick="setMode('shapes')">Shapes</button>
+            </div>
+            <div class="w3-margin-top">
+                <canvas id="tracingCanvas" width="400" height="400"></canvas>
+            </div>
+            <div class="w3-bar w3-margin-top">
+                <button class="w3-button w3-teal" onclick="prevLetter()">Previous</button>
+                <button class="w3-button w3-blue" onclick="clearCanvas()">Clear</button>
+                <button class="w3-button w3-green" onclick="nextLetter()">Next</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
